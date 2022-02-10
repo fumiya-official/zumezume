@@ -34,5 +34,10 @@ module Zumezume
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # cookieの使用を可能に
+    config.middleware.use ActionDispatch::Cookies 
+    config.middleware.use ActionDispatch::Session::CookieStore 
+    config.middleware.use ActionDispatch::ContentSecurityPolicy::Middleware
   end
 end
