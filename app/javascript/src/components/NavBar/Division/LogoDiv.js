@@ -11,7 +11,7 @@ const Logo = styled.img`
 const LogoDiv = () => {
   return (
     <>
-      <Link to="/">
+      <Link to="/works">
         <Logo src={logo} className="App-logo" alt="logo" />
       </Link>
     </>

@@ -7,6 +7,12 @@ Rails.application.routes.draw do
   get '/login', to: 'home#index'
   get '/signup', to: 'home#index'
 
+  # 作品
+  get '/works', to: 'home#index'
+  get '/works/new', to: 'home#index'
+  get '/works/:id', to: 'home#index'
+  get '/works/:id/edit', to: 'home#index'
+
   namespace :api do
     scope :v1 do
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
@@ -19,6 +25,10 @@ Rails.application.routes.draw do
       namespace :auth do
         get 'sessions', to: 'sessions#index'
         post 'check', to: 'sessions#check_uniqueness'
+      end
+
+      namespace :work do
+        resources :works, only: %i[index show create update destroy]
       end
     end
   end

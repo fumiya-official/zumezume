@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_05_131002) do
+ActiveRecord::Schema.define(version: 2022_02_12_070537) do
 
   create_table "users", force: :cascade do |t|
     t.string "provider", default: "email", null: false
@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2022_02_05_131002) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
-    t.string "name", null: false # user_idの役割
+    t.string "name", null: false
     t.string "nickname"
     t.string "image"
     t.string "email"
@@ -36,6 +36,15 @@ ActiveRecord::Schema.define(version: 2022_02_05_131002) do
     t.index ["name"], name: "index_users_on_name", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
+  end
+
+  create_table "works", force: :cascade do |t|
+    t.string "user_id", null: false
+    t.string "title"
+    t.text "content"
+    t.integer "release", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
 end

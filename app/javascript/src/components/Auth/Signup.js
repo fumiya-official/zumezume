@@ -128,10 +128,9 @@ function Signup() {
   const { dispatch } = useContext(DispatchAuthContext)
 
   useEffect(() => {
-    console.log(state)
+    // ログインしていればホームへ遷移
     if (state.auth) {
-      console.log('auth is true')
-      navigate('/')
+      navigate("/");
     }
   })
   
@@ -185,7 +184,8 @@ function Signup() {
         Cookies.set("_uid", resp.headers["uid"])
         dispatch({
           type: "SUCCESS",
-          name: resp.data.data.name
+          id: resp.data.data.name,
+          name: resp.data.data.nickname
         })
         navigate("/")
       }
@@ -193,6 +193,7 @@ function Signup() {
         console.log("失敗")
         dispatch({
           type: "FAILED",
+          id: null,
           name: null
         })
       }
@@ -200,6 +201,7 @@ function Signup() {
     .catch((err) => {
       dispatch({
         type: "FAILED",
+        id: null,
         name: null
       })
     })

@@ -100,6 +100,7 @@ const HomeNavBar = () => {
       .then((resp) => {
         dispatch({
           type: "FAILED",
+          id: null,
           name: null
         })
         AxiosWrapper.defaults.headers.common['X-CSRF-Token'] = resp.headers['x-csrf-token']

@@ -120,9 +120,9 @@ function Login() {
   const { dispatch } = useContext(DispatchAuthContext)
   
   useEffect(() => {
-    console.log(state)
-    if (state.auth !== null && state.name !== null) {
-      useNavigate('/')
+    // ログインしていればホームへ遷移
+    if (state.auth) {
+      navigate("/");
     }
   })
 
@@ -149,7 +149,8 @@ function Login() {
 
         dispatch({
           type: "SUCCESS",
-          name: resp.data.data.name
+          id: resp.data.data.name,
+          name: resp.data.data.nickname
         })
         navigate("/")
       }
@@ -157,6 +158,7 @@ function Login() {
         setMatch(false)
         dispatch({
           type: "FAILED",
+          id: null,
           name: null
         })
       }
@@ -165,6 +167,7 @@ function Login() {
       setMatch(false)
       dispatch({
         type: "FAILED",
+        id: null,
         name: null
       })
     })
