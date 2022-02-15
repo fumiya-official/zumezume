@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import styled from 'styled-components'
-import { WritingModeContext } from "../../Work/WritingModeContext";
+import { WritingModeContext } from "../../../context/WritingModeContext";
 import { IconContext } from "react-icons";
 import { FiSettings } from "react-icons/fi";
 import Cookies from 'js-cookie'
@@ -139,35 +139,19 @@ const ModeSpan = styled.span`
 
 const SettingDiv = () => {
   const [open, setOpen] = useState(false);
-  const { writing_mode, setWritingMode } = useContext(WritingModeContext);
-
+  const { writing_mode, handleClickModeChange, width } = useContext(WritingModeContext);
+  
+  // タテ書きモードの時にスイッチの初期位置を"タテ"にシフト
   useEffect(() => {
     if (writing_mode === "VERTICAL" && open) document.getElementById("switch-checkbox").checked = true
   }, [open])
+
+  // ウィンドウサイズが変更して、タテからヨコに変更したときスイッチの位置を"ヨコ"にシフト
+  useEffect(() => {
+    if (open && width < 900) document.getElementById("switch-checkbox").checked = false
+  }, [width])
+
   const toggling = () => setOpen(!open);
-  
-  const handleModeClick = (event) => {
-    let used_browser = window.navigator.userAgent.toLowerCase();
-    let display_width = document.documentElement.clientWidth;
-
-    if (writing_mode === "HORIZONTAL") {
-      if (used_browser.indexOf("chrome") === -1) {
-        alert("縦書きモードはChromeを使ってください");
-        event.preventDefault();
-        return;
-      } else if (display_width < 900) {
-        alert("画面サイズを大きくしてください");
-        event.preventDefault();
-        return;
-      }
-      Cookies.set("_writing_mode", "VERTICAL");
-
-      setWritingMode("VERTICAL");
-    } else {
-      Cookies.set("_writing_mode", "HORIZONTAL");
-      setWritingMode("HORIZONTAL");
-    }
-  };
 
   return (
     <>
@@ -191,7 +175,7 @@ const SettingDiv = () => {
                         <SwitchCheckbox
                           type="checkbox"
                           id="switch-checkbox"
-                          onClick={handleModeClick}
+                          onClick={handleClickModeChange}
                         />
                         <SwitchLabel htmlFor="">
                           <ModeSpan>ヨコ</ModeSpan>

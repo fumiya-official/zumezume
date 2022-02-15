@@ -5,7 +5,7 @@ import { getCaretPosition, moveCaret, getCurrentChild } from './utils/caretOpera
 import { inputRestriction, countContentLines } from './utils/characterLimit'
 import { createSpan, createBr } from './utils/createElement'
 import PostNavBar from '../NavBar/PostNavBar'
-import { WritingModeContext } from './WritingModeContext'
+import { WritingModeContext } from '../../context/WritingModeContext'
 
 const WorkWrapper = styled.div`
   position: relative;
@@ -325,13 +325,13 @@ function PostWork() {
   const handleContentInput = (event) => {
     const element = document.getElementById('content')
     const nodes = element.childNodes
-    const num_lines = countContentLines(nodes) // 行数の取得
-    
-    num_lines > 20 || event.target.innerText.length === 0
-      ? setInvalidContent(true)
-      : setInvalidContent(false)
+    let sum_lines = countContentLines(nodes) // 行数の取得
 
     if (pushed_key === 'Backspace' || pushed_key == 'Enter') {
+      sum_lines > 20 || event.target.innerText.length === 0
+        ? setInvalidContent(true)
+        : setInvalidContent(false)
+
       setWork({...work, content: event.target.innerHTML})
       return
     }
@@ -348,14 +348,20 @@ function PostWork() {
     
     const node = nodes[current_child_num]
     moveCaret(node, child_caret_position, selection)
+    
+    sum_lines = countContentLines(nodes)
+    
+    sum_lines > 20 || event.target.innerText.length === 0
+      ? setInvalidContent(true)
+      : setInvalidContent(false)
   }
 
   const contentKeyDown = (event) => {
     if (!inputting) {
       const nodes = document.getElementById('content').childNodes
-      const num_lines = countContentLines(nodes)
-      const num_words = num_lines * 20
-      const limit = inputRestriction(event, num_words, content_max_words + 20)
+      const sum_lines = countContentLines(nodes)
+      const sum_words = sum_lines * 20
+      const limit = inputRestriction(event, sum_words, content_max_words + 20)
 
       if (!limit) {
         event.preventDefault()
@@ -413,6 +419,12 @@ function PostWork() {
     selection.removeAllRanges();
     selection.addRange(range);
     event.stopPropagation();
+
+    const nodes = element.childNodes
+    const sum_lines = countContentLines(nodes) // 行数の取得
+    sum_lines > 20 || event.target.innerText.length === 0
+      ? setInvalidContent(true)
+      : setInvalidContent(false)
   }
   
   // 一回クリックするだけでは、なぜかfocusされないので

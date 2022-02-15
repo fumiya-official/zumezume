@@ -6,7 +6,7 @@ import { getCaretPosition, moveCaret, getCurrentChild } from './utils/caretOpera
 import { inputRestriction, countContentLines } from './utils/characterLimit'
 import { createSpan, createBr } from './utils/createElement'
 import PostNavBar from '../NavBar/PostNavBar'
-import { WritingModeContext } from './WritingModeContext'
+import { WritingModeContext } from '../../context/WritingModeContext'
 import AxiosWrapper from '../../request/AxiosWrapper'
 
 const WorkWrapper = styled.div`
@@ -363,9 +363,9 @@ function EditWork() {
   const handleContentInput = (event) => {
     const element = document.getElementById('content')
     const nodes = element.childNodes
-    const num_lines = countContentLines(nodes) // 行数の取得
-    
-    num_lines > 20 || event.target.innerText.length === 0
+    const sum_lines = countContentLines(nodes) // 行数の取得
+    console.log(sum_lines)
+    sum_lines > 20 || event.target.innerText.length === 0
       ? setInvalidContent(true)
       : setInvalidContent(false)
 
@@ -391,9 +391,9 @@ function EditWork() {
   const contentKeyDown = (event) => {
     if (!inputting) {
       const nodes = document.getElementById('content').childNodes
-      const num_lines = countContentLines(nodes)
-      const num_words = num_lines * 20
-      const limit = inputRestriction(event, num_words, content_max_words + 20)
+      const sum_lines = countContentLines(nodes)
+      const sum_words = sum_lines * 20
+      const limit = inputRestriction(event, sum_words, content_max_words + 20)
 
       if (!limit) {
         event.preventDefault()

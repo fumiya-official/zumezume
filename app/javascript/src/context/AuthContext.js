@@ -50,6 +50,7 @@ const getCurrentUser = () => {
 const handleGetCurrentUser = async (dispatch) => {
   try {
     const resp = await getCurrentUser()
+    console.log(resp)
     if (resp.data.logged_in) {
       dispatch({
         type: "SUCCESS",
@@ -82,18 +83,15 @@ const AuthProvider = ({ children }) => {
   }
 
   const [state, dispatch] = useReducer(AuthReducer, initial_state)
-  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
     handleGetCurrentUser(dispatch)
-    setLoading(false)
-  }, [state.id])
+  }, [])
   
   return (
     <StateAuthContext.Provider value={{ state }}>
       <DispatchAuthContext.Provider value={{ dispatch }}>
-        {!loading && children}
+        {children}
       </DispatchAuthContext.Provider>
     </StateAuthContext.Provider>
   )

@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react"
 import styled from "styled-components"
 import { Link, useNavigate } from "react-router-dom"
 import AxiosWrapper from "../../request/AxiosWrapper"
-import { StateAuthContext,DispatchAuthContext } from '../AuthContext'
+import { StateAuthContext,DispatchAuthContext } from '../../context/AuthContext'
 import Cookies from 'js-cookie'
 
 const LoginWrapper = styled.div`

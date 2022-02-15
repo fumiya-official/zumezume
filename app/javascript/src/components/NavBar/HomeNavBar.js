@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import LogoDiv from "./Division/LogoDiv";
-import { DispatchAuthContext } from "../AuthContext";
+import { DispatchAuthContext } from "../../context/AuthContext";
 import Cookies from 'js-cookie'
 import AxiosWrapper from '../../request/AxiosWrapper'
 
@@ -68,17 +68,19 @@ const Write = styled.div`
   padding: 0.1em 1em;
   text-decoration: none;
   background: #96514d;
+  border: solid 1px #96514d;
   border-radius: 3px;
-
-  a {
-    color: inherit;
-  }
 
   &:hover {
     background-color: #7a4340;
+    border: solid 1px #7a4340;
     cursor: pointer;
   }
-`
+
+  a {
+    color: #fff;
+  }
+`;
 
 const HomeNavBar = () => {
   const { dispatch } = useContext(DispatchAuthContext)
@@ -100,7 +102,6 @@ const HomeNavBar = () => {
       .then((resp) => {
         dispatch({
           type: "FAILED",
-          id: null,
           name: null
         })
         AxiosWrapper.defaults.headers.common['X-CSRF-Token'] = resp.headers['x-csrf-token']

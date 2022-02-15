@@ -4,7 +4,7 @@ import LogoDiv from "./Division/LogoDiv";
 import SettingDiv from "./Division/SettingDiv";
 import ModalWindowDiv from "./Division/ModalWindowDiv";
 import AxiosWrapper from "../../request/AxiosWrapper";
-import { StateAuthContext } from "../AuthContext";
+import { StateAuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const NavBarWrapper = styled.div`
@@ -111,7 +111,7 @@ const PostNavBar = (props) => {
   const [work_id, setWorkId] = useState(null)
   const { state } = useContext(StateAuthContext)
   const navigate = useNavigate()
-
+  console.log(props)
   // 現在のユーザとworks.user_idが一致しなければWorkListに遷移
   useEffect(() => {
     if (props.value.user_id) {

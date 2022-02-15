@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import AxiosWrapper from "../../request/AxiosWrapper"
-import { WritingModeContext } from './WritingModeContext'
+import { WritingModeContext } from '../../context/WritingModeContext'
 
 const ShowWorkWrapper = styled.div`
   position: relative;

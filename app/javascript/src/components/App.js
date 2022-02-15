@@ -15,7 +15,7 @@ import EditWork from './Work/EditWork'
 import PostWork from './Work/PostWork'
 import ShowWork from './Work/ShowWork'
 import WorkList from './Work/WorkList'
-import { WritingModeProvider } from './Work/WritingModeContext'
+import { WritingModeProvider } from '../context/WritingModeContext'
 
 
 function App() {
@@ -36,6 +36,7 @@ function App() {
           <Route exact path="/works/new" element={
             <RouteAuthGuard component={<PostWork />} redirect="/works" />
           } />
+          {/* <Route exact path="/works/new" element={<PostWork />} /> */}
           <Route exact path="/works/:id" element={<ShowWork />} />
           <Route exact path="/works" element={<WorkList />} />
         </Routes>
