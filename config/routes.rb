@@ -29,6 +29,7 @@ Rails.application.routes.draw do
 
       namespace :work do
         resources :works, only: %i[index show create update destroy]
+        resources :comments, only: %i[index create update destroy]
       end
     end
   end

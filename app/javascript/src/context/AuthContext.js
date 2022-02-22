@@ -12,7 +12,8 @@ const AuthReducer = (state, action) => {
       return {
         auth: true,
         id: action.id,
-        name: action.name
+        name: action.name,
+        nickname: action.nickname
       }
     case "FAILED":
       console.log('failed')
@@ -54,15 +55,17 @@ const handleGetCurrentUser = async (dispatch) => {
     if (resp.data.logged_in) {
       dispatch({
         type: "SUCCESS",
-        id: resp.data.data.name,
-        name: resp.data.data.nickname
+        id: resp.data.data.id,
+        name: resp.data.data.name,
+        nickname: resp.data.data.nickname
       });
     }
     else {
       dispatch({
         type: "FAILED",
         id: null,
-        name: null
+        name: null,
+        nickname: null
       })
     }
   }
@@ -70,7 +73,8 @@ const handleGetCurrentUser = async (dispatch) => {
     dispatch({
       type: "FAILED",
       id: null,
-      name: null
+      name: null,
+      nickname: null
     })
   }
 }
@@ -79,7 +83,8 @@ const AuthProvider = ({ children }) => {
   const initial_state = {
     auth: false,
     id: null,
-    name: null
+    name: null,
+    nickname: null
   }
 
   const [state, dispatch] = useReducer(AuthReducer, initial_state)

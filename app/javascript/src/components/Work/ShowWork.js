@@ -3,12 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import AxiosWrapper from "../../request/AxiosWrapper"
 import { WritingModeContext } from '../../context/WritingModeContext'
+import Comment from '../Comment/Comment'
 
 const ShowWorkWrapper = styled.div`
   position: relative;
   text-align: center;
   margin: 35px auto 0 auto;
   font-family: Hiragino Mincho ProN;
+  height: 800px;
 `;
 
 const HorizontalWorkWrapper = styled.div`
@@ -202,6 +204,7 @@ function ShowWork() {
   const [work, setWork] = useState([])
   const { id } = useParams()
   const navigate = useNavigate()
+
   const getWork = (id) => {
     AxiosWrapper
     .get(`/work/works/${id}`)
@@ -244,6 +247,7 @@ function ShowWork() {
           </VerticalWorkWrapper>
         }
       </ShowWorkWrapper>
+      <Comment work_id={id}/>
     </>
   )
 }

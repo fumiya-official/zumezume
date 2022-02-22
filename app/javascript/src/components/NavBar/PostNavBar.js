@@ -114,6 +114,7 @@ const PostNavBar = (props) => {
   console.log(props)
   // 現在のユーザとworks.user_idが一致しなければWorkListに遷移
   useEffect(() => {
+    console.log(state)
     if (props.value.user_id) {
       if (props.action === "edit" && props.value.user_id !== state.id) {
         navigate("/works")
@@ -154,7 +155,7 @@ const PostNavBar = (props) => {
       setShowErrorModal(true)
       return
     }
-
+    
     const work = {
       title: props.value.title,
       content: props.value.content,

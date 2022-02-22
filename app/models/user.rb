@@ -13,4 +13,9 @@ class User < ActiveRecord::Base
 
   before_save { self.name = name.downcase }
   validates :name, presence: true, uniqueness: true
+
+  # user : works = 1 : N
+  has_many :works, dependent: :destroy
+  # user : comments = 1 : N
+  has_many :comments, dependent: :destroy
 end

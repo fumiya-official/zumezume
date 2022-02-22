@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { WritingModeContext } from "../../../context/WritingModeContext";
 import { IconContext } from "react-icons";
 import { FiSettings } from "react-icons/fi";
-import Cookies from 'js-cookie'
 
 const SettingWrapper = styled.div`
   margin-left: 1em;
