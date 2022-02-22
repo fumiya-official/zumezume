@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
-import AxiosWrapper from "../../request/AxiosWrapper";
-import { StateAuthContext } from "../../context/AuthContext";
+import AxiosWrapper from "../../../request/AxiosWrapper";
+import { StateAuthContext } from "../../../context/AuthContext";
 import { IconContext } from "react-icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdDelete } from "react-icons/md"

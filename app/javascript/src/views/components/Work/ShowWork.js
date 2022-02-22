@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import AxiosWrapper from "../../request/AxiosWrapper"
-import { WritingModeContext } from '../../context/WritingModeContext'
+import AxiosWrapper from "../../../request/AxiosWrapper"
+import { WritingModeContext } from '../../../context/WritingModeContext'
 import Comment from '../Comment/Comment'
 
 const ShowWorkWrapper = styled.div`

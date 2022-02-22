@@ -3,8 +3,8 @@ import styled from "styled-components";
 import LogoDiv from "./Division/LogoDiv";
 import SettingDiv from "./Division/SettingDiv";
 import ModalWindowDiv from "./Division/ModalWindowDiv";
-import AxiosWrapper from "../../request/AxiosWrapper";
-import { StateAuthContext } from "../../context/AuthContext";
+import AxiosWrapper from "../../../request/AxiosWrapper";
+import { StateAuthContext } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const NavBarWrapper = styled.div`

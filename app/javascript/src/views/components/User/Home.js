@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { StateAuthContext } from '../../context/AuthContext'
+import { StateAuthContext } from '../../../context/AuthContext'
 import HomeNavBar from '../NavBar/HomeNavBar'
 
 function Home() {

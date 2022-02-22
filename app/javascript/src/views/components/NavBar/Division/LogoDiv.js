@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import logo from '../../../../../assets/images/zumezume_logo.png'
+import logo from '../../../../../../assets/images/zumezume_logo.png'
 
 const Logo = styled.img`
   width: 6rem;

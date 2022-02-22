@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react'
-import styled from 'styled-components'
-import { Link, useNavigate } from 'react-router-dom'
-import AxiosWrapper from "../../request/AxiosWrapper"
-import { StateAuthContext,DispatchAuthContext } from "../../context/AuthContext"
+import React, { useState, useContext, useEffect } from "react"
+import styled from "styled-components"
+import { Link, useNavigate } from "react-router-dom"
+import AxiosWrapper from "../../../request/AxiosWrapper"
+import { StateAuthContext,DispatchAuthContext } from '../../../context/AuthContext'
 import Cookies from 'js-cookie'
 
 const LoginWrapper = styled.div`
@@ -24,18 +24,22 @@ const Title = styled.div`
   margin-bottom: 2.5rem;
 `
 
-const FormContainer = styled.div``
+const FormContainer = styled.div`
+  
+`
 
-const Form = styled.form``
+const Form = styled.form`
 
-const TopField = styled.div`
+`
+
+const MailField = styled.div`
   width: 100%;
   display: block;
   text-align: left;
   margin: 0;
 `
 
-const OtherField = styled.div`
+const PasswordField = styled.div`
   width: 100%;
   display: block;
   text-align: left;
@@ -43,16 +47,12 @@ const OtherField = styled.div`
 `
 
 const Label = styled.div`
-  font-size: 0.95rem;
+  font-size: 1rem;
   padding-bottom: 0.2rem;
 `
 
-const Caption = styled.span`
-  color: #c0c0c0;
-  font-size: 0.8rem;
+const InputWrapper = styled.div`
 `
-
-const InputWrapper = styled.div``
 
 const Input = styled.input`
   width: 100%;
@@ -67,18 +67,12 @@ const Input = styled.input`
     border: solid 1px #96514d;
     outline: none;
   }
-
-  &::placeholder{
-    color: #dcdcdc;
-  }
 `
 
 const Error = styled.p`
   color: red;
-  text-align: left;
   font-size: 0.625rem;
-  margin: 0.3rem 0 1rem 0;
-  padding-left: 0.5rem;
+  margin: 2rem 0 0 0;
 `
 
 const ButtonWrapper = styled.div`
@@ -86,7 +80,7 @@ const ButtonWrapper = styled.div`
   margin-top: 2rem;
 `
 
-const SignupButton = styled.button`
+const LoginButton = styled.button`
   width: 100%;
   height: 2.5rem;
   padding: 0.5rem;
@@ -115,73 +109,44 @@ const Anounce = styled.div`
   }
 `
 
-function Signup() {
+function Login() {
   const navigate = useNavigate()
-  const [id_unique, setIdUnique] = useState(true) // falseなら同じIDが登録されている
-  const [email_unique, setEmailUnique] = useState(true) // falseなら同じemialが登録されている
+  const [match, setMatch] = useState(true)
   const [user, setUser] = useState({
-    name: "",
     email: "",
     password: ""
   })
   const { state } = useContext(StateAuthContext)
   const { dispatch } = useContext(DispatchAuthContext)
-
+  
   useEffect(() => {
     // ログインしていればホームへ遷移
     if (state.auth) {
       navigate("/");
     }
   })
-  
-  // nameまたはemailがユニークかどうか
-  const handleChange = (event) => {
-    if (event.target.name === "name" || event.target.name === "email") {
-      const check_data = {
-        name: event.target.name,
-        value: event.target.value
-      }
-      AxiosWrapper
-      .post("/auth/check", { check_data })
-      .then((resp) => {
-        if (!resp.data.uniqueness) { // 一致するデータがあるとき
-          event.target.name === "name"
-          ? setIdUnique(false)
-          : setEmailUnique(false)
-          return
-        } else {
-          event.target.name === "name"
-          ? setIdUnique(true)
-          : setEmailUnique(true)
-        }
-      })
-      .catch((err) => {
-        
-      })
-    }
 
-    setUser({ ...user, [event.target.name]: event.target.value})
+  const handleChange = (event) => {
+    setUser({...user, [event.target.name]: event.target.value})
   }
 
-  const handleSignup = (event) => {
+  const handleLogin = (event) => {
     event.preventDefault()
 
     let params = {
-      name: user.name,
       email: user.email,
       password: user.password
     }
 
     AxiosWrapper
-    .post("/auth", params, { withCredentials: true })
+    .post("/auth/sign_in", params, { withCredentials: true})
     .then((resp) => {
       if (resp.status === 200) {
         // Cookieに各値を格納
-        // 後でメール確認も追加
-        console.log("成功")
         Cookies.set("_access_token", resp.headers["access-token"])
         Cookies.set("_client", resp.headers["client"])
         Cookies.set("_uid", resp.headers["uid"])
+
         dispatch({
           type: "SUCCESS",
           id: resp.data.data.name,
@@ -190,7 +155,7 @@ function Signup() {
         navigate("/")
       }
       else {
-        console.log("失敗")
+        setMatch(false)
         dispatch({
           type: "FAILED",
           id: null,
@@ -199,6 +164,7 @@ function Signup() {
       }
     })
     .catch((err) => {
+      setMatch(false)
       dispatch({
         type: "FAILED",
         id: null,
@@ -212,31 +178,11 @@ function Signup() {
       <LoginWrapper>
         <FormWrapper>
           <Title>
-            <h1>ズメズメを始める</h1>
+            <h1>ログイン</h1>
           </Title>
           <FormContainer>
-            <Form onSubmit={handleSignup} id="form">
-              <TopField>
-                <Label>
-                  <label>
-                    ユーザーID <Caption>(3~10文字の半角英数字)</Caption>
-                  </label>
-                </Label>
-                <InputWrapper>
-                  <Input
-                    onChange={handleChange}
-                    type="text"
-                    value={user.name}
-                    placeholder="zume"
-                    name="name"
-                    minLength="3"
-                    maxLength="10"
-                    required
-                  />
-                </InputWrapper>
-              </TopField>
-              {!id_unique && <Error>既に使われています</Error>}
-              <OtherField>
+            <Form onSubmit={handleLogin} id="form">
+              <MailField>
                 <Label>
                   <label>メールアドレス</label>
                 </Label>
@@ -245,19 +191,15 @@ function Signup() {
                     onChange={handleChange}
                     type="email"
                     value={user.email}
-                    placeholder="zumezume@exapmle.com"
+                    placeholder="zumezume@example.com"
                     name="email"
-                    autoComplete="on"
                     required
                   />
                 </InputWrapper>
-              </OtherField>
-              {!email_unique && <Error>既に使われています</Error>}
-              <OtherField>
+              </MailField>
+              <PasswordField>
                 <Label>
-                  <label>
-                    パスワード <Caption>(6文字以上)</Caption>
-                  </label>
+                  <label>パスワード</label>
                 </Label>
                 <InputWrapper>
                   <Input
@@ -266,17 +208,24 @@ function Signup() {
                     value={user.password}
                     name="password"
                     autoComplete="on"
-                    minLength="6"
                     required
                   />
                 </InputWrapper>
-              </OtherField>
+              </PasswordField>
+              {!match && (
+                <Error>
+                  メールアドレス、またはパスワードに誤りがあります。
+                </Error>
+              )}
               <ButtonWrapper>
-                <SignupButton>登録する</SignupButton>
+                <LoginButton>ログイン</LoginButton>
               </ButtonWrapper>
               <AnounceWrapper>
                 <Anounce>
-                  <Link to="/login">登録済みの方はこちらから</Link>
+                  <Link to="/signup">新規会員登録はこちらから</Link>
+                </Anounce>
+                <Anounce>
+                  <Link to="/forgot_password">パスワードのお忘れはこちらから</Link>
                 </Anounce>
               </AnounceWrapper>
             </Form>
@@ -284,7 +233,7 @@ function Signup() {
         </FormWrapper>
       </LoginWrapper>
     </>
-  )
+  );
 }
 
-export default Signup
+export default Login

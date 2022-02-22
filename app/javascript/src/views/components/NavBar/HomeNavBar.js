@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import LogoDiv from "./Division/LogoDiv";
-import { DispatchAuthContext } from "../../context/AuthContext";
+import { DispatchAuthContext } from "../../../context/AuthContext";
 import Cookies from 'js-cookie'
-import AxiosWrapper from '../../request/AxiosWrapper'
+import AxiosWrapper from '../../../request/AxiosWrapper'
 
 const NavBarWrapper = styled.div`
   height: 2.5rem;

@@ -6,8 +6,8 @@ import { getCaretPosition, moveCaret, getCurrentChild } from './utils/caretOpera
 import { inputRestriction, countContentLines } from './utils/characterLimit'
 import { createSpan, createBr } from './utils/createElement'
 import PostNavBar from '../NavBar/PostNavBar'
-import { WritingModeContext } from '../../context/WritingModeContext'
-import AxiosWrapper from '../../request/AxiosWrapper'
+import { WritingModeContext } from '../../../context/WritingModeContext'
+import AxiosWrapper from '../../../request/AxiosWrapper'
 
 const WorkWrapper = styled.div`
   position: relative;

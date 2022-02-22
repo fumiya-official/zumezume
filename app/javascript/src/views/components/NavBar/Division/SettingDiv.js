@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import styled from 'styled-components'
-import { WritingModeContext } from "../../../context/WritingModeContext";
+import { WritingModeContext } from "../../../../context/WritingModeContext";
 import { IconContext } from "react-icons";
 import { FiSettings } from "react-icons/fi";
 

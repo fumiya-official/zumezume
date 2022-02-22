@@ -4,8 +4,8 @@ import "./App.css"
 import { RouteAuthGuard } from './RouterAuthGuard'
 
 // 認証
-import Login from './Auth/Login'
-import Signup from './Auth/Signup'
+import Login from '../pages/Auth/Login'
+import Signup from '../pages/Auth/Signup'
 
 // ユーザページ
 import Home from './User/Home'
@@ -15,7 +15,7 @@ import EditWork from './Work/EditWork'
 import PostWork from './Work/PostWork'
 import ShowWork from './Work/ShowWork'
 import WorkList from './Work/WorkList'
-import { WritingModeProvider } from '../context/WritingModeContext'
+import { WritingModeProvider } from '../../context/WritingModeContext'
 
 
 function App() {

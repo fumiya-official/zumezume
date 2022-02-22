@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import AxiosWrapper from '../../request/AxiosWrapper';
+import AxiosWrapper from '../../../request/AxiosWrapper';
 
 const Overlay = styled.div`
   /* 画面全体を覆う設定 */

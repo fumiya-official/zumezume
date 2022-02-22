@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components'
-import AxiosWrapper from '../../request/AxiosWrapper'
+import AxiosWrapper from '../../../request/AxiosWrapper'
 
 const PostCommentWrapper = styled.div`
   font-size: 14px;
