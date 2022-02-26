@@ -24,7 +24,6 @@ const PostComment = (props) => {
       comment: new_comment,
     };
 
-    console.log(comment);
     AxiosWrapper.post(
       "/work/comments",
       { comment: comment },

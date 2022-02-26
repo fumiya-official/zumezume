@@ -9,25 +9,35 @@ const WorkDataContext = createContext()
 const WorkInputContext = createContext()
 const WorkGetContext = createContext()
 
-const WorkProvider = ({children}) => {  
+const WorkProvider = ({children}) => {
+  /**
+   * @type {[boolean, Function]} - inputting; true: 日本語入力中, false: それ以外
+   * @type {[string, Function]} - pushed_key; 入力したキー名
+   * @type {[boolean, Function]} - invalid_title; true: ポスト不可, false: ポスト可能
+   * @type {[boolean, Function]} - invalid_content; true: ポスト不可, true: ポスト可能
+   * @type {[Object, Function]} - work; 作品データ
+   *  @property {string} title - 作品タイトル
+   *  @property {string} content - 作品の本文
+   * @param {number} title_max_words - タイトルの入力可能な最大文字数
+   * @param {number} content_max_words - 本文の入力可能な最大文字数
+   */
+  const [inputting, setInputting] = useState(false);
+  const [pushed_key, setPushedKey] = useState("");
+  const [invalid_title, setInvalidTitle] = useState(true);
+  const [invalid_content, setInvalidContent] = useState(true);
   const [work, setWork] = useState({
     title: "",
     content: "",
   });
-
-  const [inputting, setInputting] = useState(false);
-  const [pushed_key, setPushedKey] = useState("");
   const title_max_words = 20;
   const content_max_words = 400;
-  const [invalid_title, setInvalidTitle] = useState(true);
-  const [invalid_content, setInvalidContent] = useState(true);
 
   const handleTitleKeyDown = (event) => {
     if (event.key !== "Enter") return;
 
     if (!inputting) {
-      document.getElementById("content").focus();
       event.preventDefault();
+      document.getElementById("content").focus();
       return;
     } else {
       setInputting(false);
@@ -55,14 +65,25 @@ const WorkProvider = ({children}) => {
       return;
     }
 
+    /**
+     * @param {string} inputted_title - タイトルに入力された文字列
+     * @param {Object} element - id="title"の要素
+     * @param {Object} selection
+     * @param {number} caret_position - 全体ノード中のキャレット位置
+     * @param {boolean} have_span - true: element内にspanタグがある, false: ない
+     */
     let inputted_title = event.target.innerText;
     const element = document.getElementById("title");
     const selection = window.getSelection();
     let caret_position = getCaretPosition(selection, event.target);
-    let have_span = false; // div内にspanタグがあるかどうか
+    let have_span = false;
 
     inputted_title = toZenkaku(inputted_title);
 
+    /**
+     * @param {string} str_within_max_word - 文字数制限内の文字列
+     * @param {string} str_outside_max_word - 文字数制限超過の文字列
+     */
     const str_within_max_word = inputted_title.substr(0, title_max_words);
     const str_outside_max_word = inputted_title.substr(title_max_words, 5);
 

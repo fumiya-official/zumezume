@@ -20,6 +20,21 @@ import {
 
 
 const PostNavBar = (props) => {
+  /**
+   * @type {[boolean, Function]} - show_save_modal; true: 保存完了のモーダルウィンドウを表示
+   * @type {[boolean, Function]} - show_post_modal; true: 投稿完了のモーダルウィンドウを表示
+   * @type {[boolean, Function]} - show_error_modal; true: 投稿ができない旨のモーダルウィンドウを表示
+   * @type {[number, Function]} - work_id; 編集するworkのid
+   * @param {Object} state - ユーザ情報
+   *  @property {number} id - ユーザid
+   * @param {Object} data - workデータ関連
+   *  @property {Object} work - work
+   *    @property {string} title - タイトル
+   *    @property {string} content - 本文
+   * @param {Object} input - workの入力関連
+   *  @property {boolean} invalid_title - true: タイトルが原因でリクエストできない
+   *  @property {boolean} invalid_content - true: 本文が原因でリクエストできない
+   */
   const [show_save_modal, setShowSaveModal] = useState(false)
   const [show_post_modal, setShowPostModal] = useState(false)
   const [show_error_modal, setShowErrorModal] = useState(false)

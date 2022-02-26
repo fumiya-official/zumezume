@@ -1,4 +1,9 @@
-// return trueなら入力可能、return falseなら入力不可
+/**
+ * @param {Object} event - event
+ * @param {number} string_length - 文字数
+ * @param {number} max_length - 最大文字数
+ * @returns {boolean} - true: 入力可能 false: 入力不可
+ */
 export const inputRestriction = (event, string_length, max_length) => {
   const keys = [
     "Backspace",
@@ -44,7 +49,10 @@ export const inputRestriction = (event, string_length, max_length) => {
   return true;
 }
 
-// 行数をreturnする
+/**
+ * @param {Object} nodes - id="content"に属するnode全て
+ * @returns {number} - contentの行数
+ */
 export const countContentLines = (nodes) => {
   let sum_line = 0
   let sum_br = 0
@@ -70,7 +78,12 @@ export const countContentLines = (nodes) => {
   return sum_line + sum_br
 }
 
-// type 1: text 0: html
+/**
+ * @param {*} text - 文章
+ * @param {number} max_word - 最大文字数/行
+ * @param {boolean} type - true: text, false: html
+ * @returns {number} - textの行数
+ */
 export const getNumLines = (text, max_word, type) => {
   let num_lines = 0;
   let text_split_new_line = type ? text.split(/\n/) : text.split(/<br>/)

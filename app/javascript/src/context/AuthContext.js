@@ -5,9 +5,19 @@ import Cookies from 'js-cookie'
 const StateAuthContext = createContext()
 const DispatchAuthContext = createContext()
 
+/**
+ * 
+ * @param {Object} state 
+ * @param {Object} action
+ *  @property {number} type - 200: 成功, 400: 失敗
+ *  @property {number} id - ユーザid
+ *  @property {string} name - ユーザ名
+ *  @property {string} nickname - 表示名
+ * @returns {Object}
+ */
 const AuthReducer = (state, action) => {
   switch (action.type) {
-    case "SUCCESS":
+    case 200:
       console.log('success')
       return {
         auth: true,
@@ -15,7 +25,7 @@ const AuthReducer = (state, action) => {
         name: action.name,
         nickname: action.nickname
       }
-    case "FAILED":
+    case 400:
       console.log('failed')
       return {
         auth: false,
@@ -54,7 +64,7 @@ const handleGetCurrentUser = async (dispatch) => {
     console.log(resp)
     if (resp.data.logged_in) {
       dispatch({
-        type: "SUCCESS",
+        type: 200,
         id: resp.data.data.id,
         name: resp.data.data.name,
         nickname: resp.data.data.nickname
@@ -62,7 +72,7 @@ const handleGetCurrentUser = async (dispatch) => {
     }
     else {
       dispatch({
-        type: "FAILED",
+        type: 400,
         id: null,
         name: null,
         nickname: null
@@ -71,7 +81,7 @@ const handleGetCurrentUser = async (dispatch) => {
   }
   catch (err) {
     dispatch({
-      type: "FAILED",
+      type: 400,
       id: null,
       name: null,
       nickname: null
@@ -80,26 +90,33 @@ const handleGetCurrentUser = async (dispatch) => {
 }
 
 const AuthProvider = ({ children }) => {
+  /**
+   * @param {Object} initial_state - 初期値
+   *  @property {number} type - 200: 成功, 400: 失敗
+   *  @property {number} id - ユーザid
+   *  @property {string} name - ユーザ名
+   *  @property {string} nickname - 表示名
+   */
   const initial_state = {
     auth: false,
     id: null,
     name: null,
-    nickname: null
-  }
+    nickname: null,
+  };
 
-  const [state, dispatch] = useReducer(AuthReducer, initial_state)
+  const [state, dispatch] = useReducer(AuthReducer, initial_state);
 
   useEffect(() => {
-    handleGetCurrentUser(dispatch)
-  }, [])
-  
+    handleGetCurrentUser(dispatch);
+  }, []);
+
   return (
     <StateAuthContext.Provider value={{ state }}>
       <DispatchAuthContext.Provider value={{ dispatch }}>
         {children}
       </DispatchAuthContext.Provider>
     </StateAuthContext.Provider>
-  )
+  );
 }
 
 export { StateAuthContext, DispatchAuthContext, AuthProvider }

@@ -1,119 +1,27 @@
 import React, { useState, useContext, useEffect } from 'react'
-import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
 import AxiosWrapper from "../../../request/AxiosWrapper"
 import { StateAuthContext,DispatchAuthContext } from "../../../context/AuthContext"
 import Cookies from 'js-cookie'
+import {
+  AuthWrapper,
+  FormWrapper,
+  Title,
+  FormContainer,
+  Form,
+  TopField,
+  OtherField,
+  Label,
+  Caption,
+  InputWrapper,
+  Input,
+  Error,
+  ButtonWrapper,
+  Button,
+  AnnounceWrapper,
+  Announce
+} from '../../../styles/Auth/AuthStyle'
 
-const LoginWrapper = styled.div`
-  text-align: center;
-  margin-top: 4.5rem;
-`
-
-const FormWrapper = styled.div`
-  margin: 0 auto;
-  width: 20rem;
-  height: 30rem;
-  border: solid 5px rgba(155, 81, 77, 0.1);
-  border-radius: 5px;
-  padding: 1.5rem;
-`
-
-const Title = styled.div`
-  font-size: 0.875rem;
-  margin-bottom: 2.5rem;
-`
-
-const FormContainer = styled.div``
-
-const Form = styled.form``
-
-const TopField = styled.div`
-  width: 100%;
-  display: block;
-  text-align: left;
-  margin: 0;
-`
-
-const OtherField = styled.div`
-  width: 100%;
-  display: block;
-  text-align: left;
-  margin: 1rem 0 0 0;
-`
-
-const Label = styled.div`
-  font-size: 0.95rem;
-  padding-bottom: 0.2rem;
-`
-
-const Caption = styled.span`
-  color: #c0c0c0;
-  font-size: 0.8rem;
-`
-
-const InputWrapper = styled.div``
-
-const Input = styled.input`
-  width: 100%;
-  height: 2.5rem;
-  padding: 0.5rem;
-  background-color: white;
-  box-sizing: border-box;
-  border: solid 1px #e8e8e8;
-  border-radius: 5px;
-
-  &:focus {
-    border: solid 1px #96514d;
-    outline: none;
-  }
-
-  &::placeholder{
-    color: #dcdcdc;
-  }
-`
-
-const Error = styled.p`
-  color: red;
-  text-align: left;
-  font-size: 0.625rem;
-  margin: 0.3rem 0 1rem 0;
-  padding-left: 0.5rem;
-`
-
-const ButtonWrapper = styled.div`
-  width: 100%;
-  margin-top: 2rem;
-`
-
-const SignupButton = styled.button`
-  width: 100%;
-  height: 2.5rem;
-  padding: 0.5rem;
-  color: white;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  background-color: #96514d;
-
-  &:hover {
-    background-color: #7a4340;
-    cursor: pointer;
-  }
-`
-
-const AnounceWrapper = styled.div`
-  margin: 1.5rem 0;
-`
-
-const Anounce = styled.div`
-  color: #b8b8b8;
-  a {
-    font-size: 0.777rem;
-    color: #b8b8b8;
-    text-decoration: underline;
-  }
-`
 
 function Signup() {
   const navigate = useNavigate()
@@ -183,7 +91,7 @@ function Signup() {
         Cookies.set("_client", resp.headers["client"])
         Cookies.set("_uid", resp.headers["uid"])
         dispatch({
-          type: "SUCCESS",
+          type: 200,
           id: resp.data.data.name,
           name: resp.data.data.nickname
         })
@@ -192,7 +100,7 @@ function Signup() {
       else {
         console.log("失敗")
         dispatch({
-          type: "FAILED",
+          type: 400,
           id: null,
           name: null
         })
@@ -200,7 +108,7 @@ function Signup() {
     })
     .catch((err) => {
       dispatch({
-        type: "FAILED",
+        type: 400,
         id: null,
         name: null
       })
@@ -209,7 +117,7 @@ function Signup() {
 
   return (
     <>
-      <LoginWrapper>
+      <AuthWrapper>
         <FormWrapper>
           <Title>
             <h1>ズメズメを始める</h1>
@@ -272,17 +180,17 @@ function Signup() {
                 </InputWrapper>
               </OtherField>
               <ButtonWrapper>
-                <SignupButton>登録する</SignupButton>
+                <Button>登録する</Button>
               </ButtonWrapper>
-              <AnounceWrapper>
-                <Anounce>
+              <AnnounceWrapper>
+                <Announce>
                   <Link to="/login">登録済みの方はこちらから</Link>
-                </Anounce>
-              </AnounceWrapper>
+                </Announce>
+              </AnnounceWrapper>
             </Form>
           </FormContainer>
         </FormWrapper>
-      </LoginWrapper>
+      </AuthWrapper>
     </>
   )
 }

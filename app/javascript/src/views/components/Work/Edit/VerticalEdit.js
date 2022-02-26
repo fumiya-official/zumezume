@@ -13,6 +13,31 @@ import {
 } from "../../../../styles/Work/WorkStyle";
 
 function VerticalEdit() {
+  /**
+   * @param {{id: number}} id - リクエストするwork_id
+   *
+   * @param {Object} data - 作品情報に関連
+   *  @type {UseState}
+   *    @property {State} work - 作品情報
+   *      @property {string} title - 作品のタイトル
+   *      @property {string} content - 作品の文章
+   *    @property {StateSetter} setWork - workの更新
+   *
+   * @param {Object} input - 作品入力に関連
+   *  @property {Function} handleTitleKeyDown - タイトル入力時に制限文字数超過を制御
+   *  @property {Fuction} handleInputTitle - タイトル入力時に全角変換等を行う
+   *  @property {Function} handleContentKeyDown - コンテンツ入力時に制限文字数超過を制御
+   *  @property {Function} handleInputContent - コンテンツ入力時に全角変換等を行う
+   *  @type {UseState}
+   *    @property {StateSetter} setInputting - 日本語入力中またはそれ以外かをセット
+   *
+   * @param {Object} get - 作品情報を取得
+   *  @property {Function} getWork - work_idと一致する作品情報を取得
+   *  @property {Function} handleSettingWork - 作品タイトルとその文章をそれぞれのdiv要素にセットする
+   *
+   * @param {{writing_mode: boolean}} writing_mode - 書く方向 [1: 横書き, 0: 縦書き]
+   */
+
   const { id } = useParams();
   const data = useContext(WorkDataContext);
   const input = useContext(WorkInputContext);
@@ -22,7 +47,8 @@ function VerticalEdit() {
   useEffect(() => {
     get.getWork(id);
   }, [id]);
-
+  
+  // 書く方向が変わった時に作品を表示できるように
   useEffect(() => {
     get.handleSettingWork(data.work.title, data.work.content);
   }, [writing_mode]);
