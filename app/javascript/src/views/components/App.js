@@ -11,37 +11,41 @@ import Signup from '../pages/Auth/Signup'
 import Home from './User/Home'
 
 // 作品
-import EditWork from './Work/EditWork'
-import PostWork from './Work/PostWork'
-import ShowWork from './Work/ShowWork'
-import WorkList from './Work/WorkList'
+import EditWork from '../pages/Work/EditWork'
+import PostWork from '../pages/Work/PostWork'
+import ShowWork from '../pages/Work/ShowWork'
+import { WorkProvider } from '../../context/WorkContext'
 import { WritingModeProvider } from '../../context/WritingModeContext'
+import Top from '../pages/Top'
 
 
 function App() {
   return (
-    <>
-      <WritingModeProvider>
-        <Routes>
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/signup" element={<Signup />} />
+    <div id="zumezume">
+      <WorkProvider>
+        <WritingModeProvider>
+          <Routes>
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/signup" element={<Signup />} />
 
-          <Route exact path="/" element={
-            <RouteAuthGuard component={<Home />} redirect="/login" />
-          } />
+            <Route exact path="/" element={
+              <RouteAuthGuard component={<Home />} redirect="/login" />
+            } />
 
-          <Route exact path="/works/:id/edit" element={
-            <RouteAuthGuard component={<EditWork />} redirect="/works" />
-          } />
-          <Route exact path="/works/new" element={
-            <RouteAuthGuard component={<PostWork />} redirect="/works" />
-          } />
-          {/* <Route exact path="/works/new" element={<PostWork />} /> */}
-          <Route exact path="/works/:id" element={<ShowWork />} />
-          <Route exact path="/works" element={<WorkList />} />
-        </Routes>
-      </WritingModeProvider>
-    </>
+            <Route exact path="/works/:id/edit" element={
+              <RouteAuthGuard component={<EditWork />} redirect="/works" />
+            } />
+            {/* <Route exact path="/works/:id/edit" element={<EditWork />} /> */}
+            {/* <Route exact path="/works/new" element={
+              <RouteAuthGuard component={<PostWork />} redirect="/works" />
+            } /> */}
+            <Route exact path="/works/new" element={<PostWork />} />
+            <Route exact path="/works/:id" element={<ShowWork />} />
+            <Route exact path="/works" element={<Top />} />
+          </Routes>
+        </WritingModeProvider>
+      </WorkProvider>
+    </div>
   )
 }
 

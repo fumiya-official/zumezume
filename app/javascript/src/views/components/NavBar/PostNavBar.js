@@ -1,107 +1,22 @@
 import React, { useState, useContext, useEffect } from "react";
-import styled from "styled-components";
 import LogoDiv from "./Division/LogoDiv";
 import SettingDiv from "./Division/SettingDiv";
 import ModalWindowDiv from "./Division/ModalWindowDiv";
 import AxiosWrapper from "../../../request/AxiosWrapper";
 import { StateAuthContext } from "../../../context/AuthContext";
+import { WorkDataContext, WorkInputContext } from "../../../context/WorkContext";
 import { useNavigate } from "react-router-dom";
-
-const NavBarWrapper = styled.div`
-  height: 2.5rem;
-  border-bottom: solid 0.1px #c0c0c0;
-`
-
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-right: 1rem;
-  margin-left: 1rem;
-`;
-
-const Left = styled.div`
-  padding-top: 0.4rem;
-  padding-bottom: 0.2rem;
-`;
-
-const Right = styled.div`
-  div {
-    display: inline-block;
-  }
-  padding-right: 2rem;
-  color: #fff;
-  text-align: center;
-  font-size: 0.93rem;
-`;
-
-const CancelWrapper = styled.div`
-  margin: 0 0.5em;
-`;
-
-const CancelButton = styled.button`
-  display: inline-block;
-  padding: 0.1em 1em;
-  text-decoration: none;
-  background: #f7f7f7;
-  color: #96514d;
-  border: solid 1px #96514d;
-  border-radius: 3px;
-
-  a {
-    color: inherit;
-  }
-
-  &:hover {
-    color: #ba6661;
-    border: solid 1px #ba6661;
-    cursor: pointer
-  }
-`;
-
-const SaveWrapper = styled.div`
-  margin: 0 0.5em;
-`;
-
-const SaveButton = styled.button`
-  display: inline-block;
-  padding: 0.1em 1em;
-  text-decoration: none;
-  background: #f7f7f7;
-  color: #96514d;
-  border: solid 1px #96514d;
-  border-radius: 3px;
-
-  a {
-    color: inherit;
-  }
-
-  &:hover {
-    color: #ba6661;
-    border: solid 1px #ba6661;
-    cursor: pointer;
-  }
-`;
-
-const PostWrapper = styled.div`
-  margin: 0 0.5em;
-`;
-
-const PostButton = styled.button`
-  display: inline-block;
-  padding: 0.1em 1em;
-  text-decoration: none;
-  background: #96514d;
-  border: solid 1px #96514d;
-  border-radius: 3px;
-  color: inherit;
-
-  &:hover {
-    background-color: #7a4340;
-    border: solid 1px #7a4340;
-    cursor: pointer;
-  }
-`;
+import {
+  NavBarWrapper,
+  Header,
+  Left,
+  Center,
+  Right,
+  ButtonWrapper,
+  Button,
+  FillButtonWrapper,
+  FillButton
+} from "../../../styles/NavBar/NavBarStyle";
 
 
 const PostNavBar = (props) => {
@@ -111,27 +26,28 @@ const PostNavBar = (props) => {
   const [work_id, setWorkId] = useState(null)
   const { state } = useContext(StateAuthContext)
   const navigate = useNavigate()
-  console.log(props)
+  const data = useContext(WorkDataContext)
+  const input = useContext(WorkInputContext)
   // 現在のユーザとworks.user_idが一致しなければWorkListに遷移
-  useEffect(() => {
-    console.log(state)
-    if (props.value.user_id) {
-      if (props.action === "edit" && props.value.user_id !== state.id) {
-        navigate("/works")
-      }
-    }
-  }, [props.value.user_id])
+  // useEffect(() => {
+  //   console.log(state)
+  //   if (props.value.user_id) {
+  //     if (props.action === "edit" && props.value.user_id !== state.id) {
+  //       navigate("/works")
+  //     }
+  //   }
+  // }, [props.value.user_id])
 
   const handleSave = () => {
-    const work = {
-      title: props.value.title,
-      content: props.value.content,
+    const post_data = {
+      title: data.work.title,
+      content: data.work.content,
       release: 0,
       user_id: state.id,
     }
 
     if (props.action === "post") {
-      AxiosWrapper.post("/work/works", { work: work }, { withCredentials: true })
+      AxiosWrapper.post("/work/works", { work: post_data }, { withCredentials: true })
         .then((resp) => {
           setShowSaveModal(true)
         })
@@ -140,7 +56,7 @@ const PostNavBar = (props) => {
         })
     }
     else if (props.action === "edit") {
-      AxiosWrapper.patch(`/work/works/${props.value.id}`, { work: work }, { withCredentials: true })
+      AxiosWrapper.patch(`/work/works/${props.value.id}`, { work: post_data }, { withCredentials: true })
         .then((resp) => {
           setShowSaveModal(true)
         })
@@ -151,20 +67,20 @@ const PostNavBar = (props) => {
   }
 
   const handlePost = () => {
-    if (props.invalid_title || props.invalid_content) {
+    if (input.invalid_title || input.invalid_content) {
       setShowErrorModal(true)
       return
     }
     
-    const work = {
-      title: props.value.title,
-      content: props.value.content,
+    const post_data = {
+      title: data.work.title,
+      content: data.work.content,
       release: 1,
       user_id: state.id,
     }
     
     if (props.action === "post") {
-      AxiosWrapper.post("/work/works", { work: work }, { withCredentials: true })
+      AxiosWrapper.post("/work/works", { work: post_data }, { withCredentials: true })
         .then((resp) => {
           setWorkId(resp.data.id)
           setShowPostModal(true)
@@ -174,7 +90,7 @@ const PostNavBar = (props) => {
         })
     }
     else if (props.action === "edit") {
-      AxiosWrapper.patch(`/work/works/${props.value.id}`, { work: work }, { withCredentials: true })
+      AxiosWrapper.patch(`/work/works/${props.value.id}`, { work: post_data }, { withCredentials: true })
         .then((resp) => {
           setWorkId(resp.data.id)
           setShowPostModal(true)
@@ -193,17 +109,17 @@ const PostNavBar = (props) => {
             <LogoDiv />
           </Left>
           <Right>
-            <CancelWrapper>
-              <CancelButton onClick={handleSave}>キャンセル</CancelButton>
-            </CancelWrapper>
-            <SaveWrapper>
-              <SaveButton onClick={handleSave}>保存</SaveButton>
-            </SaveWrapper>
-            <PostWrapper>
-              <PostButton onClick={handlePost} >
+            <ButtonWrapper>
+              <Button onClick={handleSave}>キャンセル</Button>
+            </ButtonWrapper>
+            <ButtonWrapper>
+              <Button onClick={handleSave}>保存</Button>
+            </ButtonWrapper>
+            <FillButtonWrapper>
+              <FillButton onClick={handlePost} >
                 投稿
-              </PostButton>
-            </PostWrapper>
+              </FillButton>
+            </FillButtonWrapper>
             <SettingDiv />
           </Right>
         </Header>

@@ -69,3 +69,15 @@ export const countContentLines = (nodes) => {
 
   return sum_line + sum_br
 }
+
+// type 1: text 0: html
+export const getNumLines = (text, max_word, type) => {
+  let num_lines = 0;
+  let text_split_new_line = type ? text.split(/\n/) : text.split(/<br>/)
+  
+  text_split_new_line.forEach((elem) => {
+    num_lines = num_lines + Math.ceil(elem.length / max_word);
+  });
+
+  return num_lines;
+};

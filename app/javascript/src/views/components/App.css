@@ -1,3 +1,21 @@
+@media only screen and (max-width: 480px) { /* モバイルフォン */
+  #zumezume {
+    font-size: 12px
+  }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 1024px) { /* タブレット */
+  #zumezume {
+    font-size: 14px
+  }
+}
+
+@media only screen and (min-width: 1024px) { /* PC */
+  #zumezume {
+    font-size: 16px
+  }
+}
+
 a {
   text-decoration: none;
   color: black;

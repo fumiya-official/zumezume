@@ -1,19 +1,20 @@
 import React from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
 import logo from '../../../../../../assets/images/zumezume_logo.png'
+import {
+  LogoWrapper,
+  Logo
+} from "../../../../styles/NavBar/Division/DivisionStyle";
 
-const Logo = styled.img`
-  width: 6rem;
-  height: 1.7rem;
-`
 
 const LogoDiv = () => {
   return (
     <>
-      <Link to="/works">
-        <Logo src={logo} className="App-logo" alt="logo" />
-      </Link>
+      <LogoWrapper>
+        <Link to="/works">
+          <Logo src={logo} className="App-logo" alt="logo" />
+        </Link>
+      </LogoWrapper>
     </>
   );
 }
