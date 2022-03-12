@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { StateAuthContext } from '../../../context/AuthContext';
 import AxiosWrapper from '../../../request/AxiosWrapper'
 import {
   PostCommentWrapper,
@@ -9,18 +11,22 @@ import {
 
 const PostComment = (props) => {
   const [new_comment, setNewComment] = useState("");
-  
-  const handleInputComment = (event) => {
-    console.log(event.target.innerText)
-    setNewComment(event.target.innerText)
+  const { state } = useContext(StateAuthContext)
+  const navigation = useNavigate()
+
+  const handleFocus = () => {
+    // ログインしていなければログインページに遷移
+    if (!state.auth) navigation("/login")
   }
+
+  const handleInputComment = (event) => setNewComment(event.target.innerText)
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const comment = {
-      user_id: 1,
-      work_id: 1,
+      user_id: state.id,
+      work_id: props.work_id,
       comment: new_comment,
     };
 
@@ -46,6 +52,7 @@ const PostComment = (props) => {
           contentEditable="true"
           placeholder="コメントをする"
           onInput={handleInputComment}
+          onFocus={handleFocus}
         />
         <SubmitButtonWrapper>
           <SubmitButton onClick={handleSubmit}>投稿</SubmitButton>
