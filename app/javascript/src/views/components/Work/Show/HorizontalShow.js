@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
 import { WorkDataContext, WorkGetContext } from '../../../../context/WorkContext';
 import { getNumLines } from "../utils/characterLimit";
 import {
@@ -11,6 +10,7 @@ import {
   HorizontalTitleWrapper,
   HorizontalTitle,
 } from "../../../../styles/Work/WorkStyle";
+import { WritingModeContext } from '../../../../context/WritingModeContext';
 
 function HorizontalShow() {
   /**
@@ -25,28 +25,24 @@ function HorizontalShow() {
    *  @property {Function} getWork - work_idと一致する作品情報を取得
    *
    * @param {{id: number}} id - リクエストするwork_id
-   * 
+   *
    * @param {Function} navigate - ページ遷移
-   * 
+   *
    * @param {Number} num_lines - 作品の文章の行数
    */
-
-  const get = useContext(WorkGetContext);
   const data = useContext(WorkDataContext);
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const get = useContext(WorkGetContext);
+  const { writing_mode } = useContext(WritingModeContext);
   let num_lines = getNumLines(data.work.content, 20, 0);
 
+  // 書く方向が変わった時に作品を表示できるように
   useEffect(() => {
-    get.getWork(id);
-  }, [id]);
+    if (data.work) get.handleSettingWork(data.work.title, data.work.content);
+  }, [writing_mode]);
 
   return (
     <WorkWrapper>
       <HorizontalWorkWrapper>
-        <button onClick={() => navigate(`/works/${data.work.id}/edit`)}>
-          編集
-        </button>
         <HorizontalTitleWrapper>
           <HorizontalTitle id="title" />
         </HorizontalTitleWrapper>

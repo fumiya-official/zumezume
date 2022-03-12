@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
 import { WorkDataContext, WorkGetContext, WorkInputContext } from '../../../../context/WorkContext';
 import { WritingModeContext } from '../../../../context/WritingModeContext';
 import {
@@ -37,16 +36,10 @@ function VerticalEdit() {
    *
    * @param {{writing_mode: boolean}} writing_mode - 書く方向 [1: 横書き, 0: 縦書き]
    */
-
-  const { id } = useParams();
   const data = useContext(WorkDataContext);
   const input = useContext(WorkInputContext);
   const get = useContext(WorkGetContext);
   const { writing_mode } = useContext(WritingModeContext);
-
-  useEffect(() => {
-    get.getWork(id);
-  }, [id]);
   
   // 書く方向が変わった時に作品を表示できるように
   useEffect(() => {

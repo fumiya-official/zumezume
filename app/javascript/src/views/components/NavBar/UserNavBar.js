@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LogoDiv from "./Division/LogoDiv";
-import { DispatchAuthContext } from "../../../context/AuthContext";
+import { DispatchAuthContext, StateAuthContext } from "../../../context/AuthContext";
 import Cookies from 'js-cookie'
 import AxiosWrapper from '../../../request/AxiosWrapper'
 import {
@@ -17,8 +17,10 @@ import {
 } from "../../../styles/NavBar/NavBarStyle";
 
 
-const HomeNavBar = () => {
+const UserNavBar = () => {
   const { dispatch } = useContext(DispatchAuthContext)
+  const { state } = useContext(StateAuthContext)
+  const navigate = useNavigate()
 
   const handleLogout = (event) => {
     event.preventDefault()
@@ -58,9 +60,15 @@ const HomeNavBar = () => {
           </Left>
           <Right>
             <ButtonWrapper>
-              <Button onClick={handleLogout}>
-                ログアウト
-              </Button>
+              { state.auth ?
+                <Button onClick={handleLogout}>
+                  ログアウト
+                </Button>
+                :
+                <Button onClick={() => navigate("/login")}>
+                  ログイン
+                </Button>
+              }
             </ButtonWrapper>
             <FillButtonWrapper>
               <FillButton>
@@ -74,4 +82,4 @@ const HomeNavBar = () => {
   )
 }
 
-export default HomeNavBar
+export default UserNavBar

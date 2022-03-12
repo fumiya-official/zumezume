@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
 import { WorkDataContext, WorkGetContext } from '../../../../context/WorkContext';
+import { WritingModeContext } from '../../../../context/WritingModeContext';
 import {
   WorkWrapper,
   VerticalWorkWrapper,
@@ -27,21 +27,17 @@ function VerticalShow() {
    *
    * @param {Function} navigate - ページ遷移
    */
-  
-  const get = useContext(WorkGetContext);
   const data = useContext(WorkDataContext);
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const get = useContext(WorkGetContext);
+  const { writing_mode } = useContext(WritingModeContext);
 
+  // 書く方向が変わった時に作品を表示できるように
   useEffect(() => {
-    get.getWork(id);
-  }, [id]);
+    if (data.work) get.handleSettingWork(data.work.title, data.work.content);
+  }, [writing_mode]);
 
   return (
     <WorkWrapper>
-      <button onClick={() => navigate(`/works/${data.work.id}/edit`)}>
-        編集
-      </button>
       <VerticalWorkWrapper>
         <VerticalContentWrapper>
           <VerticalManuscriptPaper>

@@ -21,6 +21,7 @@ import {
   AnnounceWrapper,
   Announce
 } from '../../../styles/Auth/AuthStyle'
+import AuthNavBar from '../../components/NavBar/AuthNavbar'
 
 
 function Signup() {
@@ -117,6 +118,7 @@ function Signup() {
 
   return (
     <>
+      <AuthNavBar />
       <AuthWrapper>
         <FormWrapper>
           <Title>

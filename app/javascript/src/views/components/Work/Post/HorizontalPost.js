@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { WorkDataContext, WorkGetContext, WorkInputContext } from '../../../../context/WorkContext'
 import { WritingModeContext } from '../../../../context/WritingModeContext';
 import {
@@ -11,7 +11,7 @@ import {
   HorizontalTitle
 } from '../../../../styles/Work/WorkStyle';
 
-function HorizontalPost() {
+function HorizontalPost(props) {
   /**
    * @param {Object} data - 作品情報に関連
    *  @type {UseState}
@@ -41,7 +41,11 @@ function HorizontalPost() {
 
   // 書く方向が変わった時に作品を表示できるように
   useEffect(() => {
-    if (data.work) get.handleSettingWork(data.work.title, data.work.content);
+    if (props.first_render.current) {// 初回レンダー時は例外
+      props.first_render.current = false
+    } else {
+      if (data.work) get.handleSettingWork(data.work.title, data.work.content);
+    }
   }, [writing_mode]);
 
   return (

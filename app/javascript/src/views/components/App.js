@@ -38,7 +38,7 @@ function App() {
               <RouteAuthGuard component={<EditWork />} redirect="/works" />
             } />
             <Route exact path="/works/new" element={
-              <RouteAuthGuard component={<PostWork />} redirect="/works" />
+              <RouteAuthGuard component={<PostWork />} redirect="/login" />
             } />
             <Route exact path="/works/:id" element={<ShowWork />} />
             <Route exact path="/works" element={<Top />} />

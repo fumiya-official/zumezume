@@ -20,6 +20,7 @@ import {
   AnnounceWrapper,
   Announce
 } from "../../../styles/Auth/AuthStyle"
+import AuthNavBar from "../../components/NavBar/AuthNavbar"
 
 
 function Login() {
@@ -62,10 +63,11 @@ function Login() {
 
         dispatch({
           type: 200,
-          id: resp.data.data.name,
-          name: resp.data.data.nickname
+          id: resp.data.data.id,
+          name: resp.data.data.name,
+          nickname: resp.data.data.nickname
         })
-        navigate("/works")
+        navigate(-1) ? navigate(-1) : navigate("/works")
       }
       else {
         setMatch(false)
@@ -88,6 +90,7 @@ function Login() {
 
   return (
     <>
+      <AuthNavBar />
       <AuthWrapper>
         <FormWrapper>
           <Title>

@@ -5,7 +5,6 @@ import ModalWindowDiv from "./Division/ModalWindowDiv";
 import AxiosWrapper from "../../../request/AxiosWrapper";
 import { StateAuthContext } from "../../../context/AuthContext";
 import { WorkDataContext, WorkInputContext } from "../../../context/WorkContext";
-import { useNavigate } from "react-router-dom";
 import {
   NavBarWrapper,
   Header,
@@ -40,18 +39,8 @@ const PostNavBar = (props) => {
   const [show_error_modal, setShowErrorModal] = useState(false)
   const [work_id, setWorkId] = useState(null)
   const { state } = useContext(StateAuthContext)
-  const navigate = useNavigate()
   const data = useContext(WorkDataContext)
   const input = useContext(WorkInputContext)
-  // 現在のユーザとworks.user_idが一致しなければWorkListに遷移
-  // useEffect(() => {
-  //   console.log(state)
-  //   if (props.value.user_id) {
-  //     if (props.action === "edit" && props.value.user_id !== state.id) {
-  //       navigate("/works")
-  //     }
-  //   }
-  // }, [props.value.user_id])
 
   const handleSave = () => {
     const post_data = {
@@ -71,7 +60,7 @@ const PostNavBar = (props) => {
         })
     }
     else if (props.action === "edit") {
-      AxiosWrapper.patch(`/work/works/${props.value.id}`, { work: post_data }, { withCredentials: true })
+      AxiosWrapper.patch(`/work/works/${data.work.id}`, { work: post_data }, { withCredentials: true })
         .then((resp) => {
           setShowSaveModal(true)
         })
@@ -105,7 +94,7 @@ const PostNavBar = (props) => {
         })
     }
     else if (props.action === "edit") {
-      AxiosWrapper.patch(`/work/works/${props.value.id}`, { work: post_data }, { withCredentials: true })
+      AxiosWrapper.patch(`/work/works/${data.work.id}`, { work: post_data }, { withCredentials: true })
         .then((resp) => {
           setWorkId(resp.data.id)
           setShowPostModal(true)
