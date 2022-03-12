@@ -2,7 +2,13 @@ class Api::V1::Work::WorksController < ApplicationController
   before_action only:[:create]
 
   def index
-    works = Work.order(updated_at: :desc)
+    if params[:name]
+      user_id = User.select(:id).find_by(name: params[:name])
+      works = Work.where(user_id: user_id).order(updated_at: :desc)
+    else
+      works = Work.order(updated_at: :desc)
+    end
+    
     render json: works
   end
 

@@ -33,6 +33,7 @@ import {
 
 function Comment(props) {
   /**
+   * @param {Object} state - ユーザ情報
    * @type {[Array, Function]} - comments
    * @type {[boolean, Function]} - show_edit_button; true: 表示, false: 非表示
    * @type {[boolean, Function]} - show_delete_modal; true: 表示, false: 非表示
@@ -40,10 +41,9 @@ function Comment(props) {
    * @type {[Object, Function]} - edit_comment; 編集コメント
    *  @property {number} user_id - ユーザのid
    *  @property {number} work_id - コメントしている作品のid
-   *  @property {string} comment - コメント内容 
-   * @param {Object} state - ユーザ情報
+   *  @property {string} comment - コメント内容
    */
-  
+  const { state } = useContext(StateAuthContext);
   const [comments, setComments] = useState([]);
   const [show_edit_button, setShowEditButton] = useState(false);
   const [show_delete_modal, setShowDeleteModal] = useState(false);
@@ -53,7 +53,6 @@ function Comment(props) {
     work_id: props.work_id,
     comment: null,
   });
-  const { state } = useContext(StateAuthContext);
 
   useEffect(() => {
     AxiosWrapper.get("/work/comments", { params: { work_id: props.work_id } })

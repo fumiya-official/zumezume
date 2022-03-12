@@ -35,7 +35,7 @@ function Login() {
   useEffect(() => {
     // ログインしていればホームへ遷移
     if (state.auth) {
-      navigate("/");
+      navigate("/works");
     }
   })
 
@@ -65,7 +65,7 @@ function Login() {
           id: resp.data.data.name,
           name: resp.data.data.nickname
         })
-        navigate("/")
+        navigate("/works")
       }
       else {
         setMatch(false)

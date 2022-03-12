@@ -13,6 +13,10 @@ Rails.application.routes.draw do
   get '/works/:id', to: 'home#index'
   get '/works/:id/edit', to: 'home#index'
 
+  # ユーザ
+  get '/:name', to: 'home#index'
+  get '/profile/setting', to: 'home#index'
+
   namespace :api do
     scope :v1 do
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
@@ -31,7 +35,12 @@ Rails.application.routes.draw do
         resources :works, only: %i[index show create update destroy]
         resources :comments, only: %i[index create update destroy]
       end
+
+      namespace :user do
+        resources :users, only: %i[index update]
+      end
     end
+
   end
 
 end
