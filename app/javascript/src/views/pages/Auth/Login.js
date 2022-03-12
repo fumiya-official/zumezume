@@ -72,18 +72,14 @@ function Login() {
       else {
         setMatch(false)
         dispatch({
-          type: 400,
-          id: null,
-          name: null
+          type: 400
         })
       }
     })
     .catch((err) => {
       setMatch(false)
       dispatch({
-        type: 400,
-        id: null,
-        name: null
+        type: 400
       })
     })
   }

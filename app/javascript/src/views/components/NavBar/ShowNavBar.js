@@ -48,8 +48,7 @@ const ShowNavBar = (props) => {
     )
       .then((resp) => {
         dispatch({
-          type: "FAILED",
-          name: null,
+          type: 400
         });
         AxiosWrapper.defaults.headers.common["X-CSRF-Token"] =
           resp.headers["x-csrf-token"];

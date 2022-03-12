@@ -29,7 +29,9 @@ const AuthReducer = (state, action) => {
       console.log('failed')
       return {
         auth: false,
-        name: null,
+        id: null,
+        name: "",
+        nickname: ""
       }
     default:
       throw new Error(`Unhandled action type: ${action.type}`)
@@ -72,19 +74,13 @@ const handleGetCurrentUser = async (dispatch) => {
     }
     else {
       dispatch({
-        type: 400,
-        id: null,
-        name: null,
-        nickname: null
+        type: 400
       })
     }
   }
   catch (err) {
     dispatch({
-      type: 400,
-      id: null,
-      name: null,
-      nickname: null
+      type: 400
     })
   }
 }

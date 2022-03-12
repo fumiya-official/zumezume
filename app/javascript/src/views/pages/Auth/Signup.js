@@ -101,17 +101,13 @@ function Signup() {
       else {
         console.log("失敗")
         dispatch({
-          type: 400,
-          id: null,
-          name: null
+          type: 400
         })
       }
     })
     .catch((err) => {
       dispatch({
-        type: 400,
-        id: null,
-        name: null
+        type: 400
       })
     })
   }
