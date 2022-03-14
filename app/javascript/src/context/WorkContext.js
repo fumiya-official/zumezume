@@ -242,6 +242,8 @@ const WorkProvider = ({children}) => {
           title: resp.data.title,
           content: resp.data.content,
           user_id: resp.data.user_id,
+          author: resp.data.author,
+          author_id: resp.data.author_id
         })
         handleSettingWork(resp.data.title, resp.data.content)
         return true

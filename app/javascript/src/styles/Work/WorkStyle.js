@@ -31,7 +31,7 @@ export const HorizontalWorkWrapper = styled.div`
 `;
 
 export const HorizontalTitleWrapper = styled.div`
-  margin: 2.2em auto;
+  margin: 2.2em auto 0.5em auto;
   &:hover {
     cursor: text;
   }
@@ -48,6 +48,18 @@ export const HorizontalTitle = styled.div`
   &:focus {
     outline: none;
   }
+`;
+
+export const HorizontalAuthorWrapper = styled.div`
+  margin: 0 auto;
+  margin-bottom: 2em;
+`
+
+export const HorizontalAuthor = styled.div`
+  font-size: 1em;
+  color: #555;
+  text-align: center;
+  text-decoration: underline;
 `;
 
 export const HorizontalContentWrapper = styled.div`

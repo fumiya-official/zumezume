@@ -67,24 +67,8 @@ const Title = styled.div`
 function WorkList() {
   const { name } = useParams()
   const [works, setWorks] = useState([])
-  const [nickname, setNickname] = useState()
 
-  const getUser = () => {
-    AxiosWrapper.get("/user/users", {
-      params: {
-        name: name,
-      },
-    })
-      .then((resp) => {
-        console.log(resp);
-        setNickname(resp.data.nickname);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  useEffect(() => {
+  const getWorks = () => {
     AxiosWrapper.get('/work/works', {
       params: {
         name: name
@@ -92,13 +76,14 @@ function WorkList() {
     })
       .then((resp) => {
         setWorks(resp.data)
-        console.log(resp.data)
       })
       .catch((err) => {
         console.log(err)
       })
-    
-    getUser()
+  }
+
+  useEffect(() => {
+    getWorks()
   }, [name])
   
 
@@ -109,14 +94,14 @@ function WorkList() {
           if (work.release) return work
         })
         .map((work) => {
-          const { id, title, updated_at } = work
+          const { id, title, author, author_id, updated_at } = work
           const date = getDate(updated_at)
           return (
             <Link to={`/works/${id}`} key={id} >
               <WorkWrapper>
                 <Work>
                   <Header>
-                    <Author>{nickname ? nickname : name}</Author>
+                    <Author>{author ? author : author_id}</Author>
                     <PostTime>{date}</PostTime>
                   </Header>
                   <Title>{title}</Title>

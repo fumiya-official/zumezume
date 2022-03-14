@@ -98,7 +98,6 @@ function Profile() {
       },
     })
       .then((resp) => {
-        console.log(resp);
         setUser(resp.data);
       })
       .catch((err) => {

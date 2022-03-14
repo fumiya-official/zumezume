@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { WorkDataContext, WorkGetContext } from '../../../../context/WorkContext';
 import { getNumLines } from "../utils/characterLimit";
 import {
@@ -9,10 +10,12 @@ import {
   HorizontalContent,
   HorizontalTitleWrapper,
   HorizontalTitle,
+  HorizontalAuthorWrapper,
+  HorizontalAuthor
 } from "../../../../styles/Work/WorkStyle";
 import { WritingModeContext } from '../../../../context/WritingModeContext';
 
-function HorizontalShow() {
+function HorizontalShow(props) {
   /**
    * @param {Object} data - 作品情報に関連
    *  @type {UseState}
@@ -46,6 +49,11 @@ function HorizontalShow() {
         <HorizontalTitleWrapper>
           <HorizontalTitle id="title" />
         </HorizontalTitleWrapper>
+        <HorizontalAuthorWrapper>
+          <Link to={`/${data.work.author_id}`}>
+            <HorizontalAuthor id="author">@{data.work.author}</HorizontalAuthor>
+          </Link>
+        </HorizontalAuthorWrapper>
         <HorizontalContentWrapper lines={num_lines}>
           <HorizontalManuscriptPaper lines={num_lines} />
           <HorizontalContent id="content" />

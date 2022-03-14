@@ -50,6 +50,15 @@ export const CommentBox = styled.div`
   }
 `;
 
+export const CommentAuthorWrapper = styled.div`
+  padding-left: 0.5em;
+`
+
+export const CommentAuthor = styled.div`
+  font-size: 0.75em;
+  color: #777;
+`
+
 export const MoreReadCheck = styled.input`
   display: none;
 

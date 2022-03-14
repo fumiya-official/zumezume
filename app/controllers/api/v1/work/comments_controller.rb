@@ -1,7 +1,8 @@
 class Api::V1::Work::CommentsController < ApplicationController
 
   def index
-    comments = Comment.where(work_id: work_id[:work_id]).order(updated_at: :desc)
+    comments = Comment.joins(:work).joins(:user).where(work_id: params[:work_id]).select('comments.id, comment, nickname AS author, name AS author_id').order(updated_at: :desc)
+    # comments = Comment.where(work_id: work_id[:work_id]).order(updated_at: :desc)
     render json: comments
   end
 

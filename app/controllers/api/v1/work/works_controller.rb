@@ -3,23 +3,21 @@ class Api::V1::Work::WorksController < ApplicationController
 
   def index
     if params[:name]
-      user_id = User.select(:id).find_by(name: params[:name])
-      works = Work.where(user_id: user_id).order(updated_at: :desc)
+      # ユーザページの作品表示用
+      works = Work.joins(:user).where(users: { name: params[:name] }).select('works.id, works.updated_at, release, user_id, title, content, nickname AS author, name AS author_id').order(updated_at: :desc)
     else
-      works = Work.order(updated_at: :desc)
+      works = Work.joins(:user).select('works.id, release, user_id, title, content, nickname AS author, name AS author_id').order(updated_at: :desc)
     end
     
     render json: works
   end
 
   def show
-    work = Work.find(params[:id])
+    work = Work.joins(:user).select('works.id, release, user_id, title, content, nickname AS author, name AS author_id').find(params[:id])
     render json: work
   end
 
   def create
-    logger.debug("作品内容")
-    logger.debug(work_params)
     work = Work.new(work_params)
     if work.save
       render json: work

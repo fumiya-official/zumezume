@@ -52,6 +52,7 @@ function WorkList() {
     AxiosWrapper
       .get("/work/works")
       .then((resp) => {
+        console.log(resp)
         setWorks(resp.data)
       })
       .catch((err) => {
@@ -69,13 +70,13 @@ function WorkList() {
             }
           })
           .map((work) => {
-            const { id, user_id, title, content } = work;
+            const { id, author_id, author, title, content } = work;
             return (
               <Link to={`/works/${id}`} key={id}>
                 <Work>
                   <Title>{title}</Title>
                   <Content dangerouslySetInnerHTML={{ __html: content }} />
-                  <User>{user_id}さん</User>
+                  <User>{author ? author : author_id}さん</User>
                 </Work>
               </Link>
             )

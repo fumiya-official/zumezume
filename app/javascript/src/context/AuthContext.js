@@ -43,8 +43,7 @@ const getCurrentUser = () => {
     console.log('ログインしていません')
     return
   }
-  console.log('ログイン中')
-
+  
   return (
     AxiosWrapper.get(
       "/auth/sessions",
@@ -63,7 +62,6 @@ const getCurrentUser = () => {
 const handleGetCurrentUser = async (dispatch) => {
   try {
     const resp = await getCurrentUser()
-    console.log(resp)
     if (resp.data.logged_in) {
       dispatch({
         type: 200,

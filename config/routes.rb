@@ -37,7 +37,7 @@ Rails.application.routes.draw do
       end
 
       namespace :user do
-        resources :users, only: %i[index update]
+        resources :users, only: %i[index update show]
       end
     end
 

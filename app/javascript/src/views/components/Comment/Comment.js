@@ -14,6 +14,8 @@ import {
   CommentWrapper,
   CommentContainer,
   CommentBox,
+  CommentAuthorWrapper,
+  CommentAuthor,
   MoreReadCheck,
   MoreReadLabel,
   CommentContent,
@@ -122,7 +124,7 @@ function Comment(props) {
         <PostComment work_id={props.work_id} />
         <ShowCommentsWrapper>
           {comments.map((com) => {
-            const { id, comment } = com;
+            const { id, comment, author, author_id } = com;
             const num_lines = getNumLines(comment, 31, 1);
             let padding_bottom = 0;
             let show_more_read = false;
@@ -137,6 +139,9 @@ function Comment(props) {
               <CommentWrapper key={id}>
                 <CommentContainer>
                   <CommentBox>
+                    <CommentAuthorWrapper>
+                      <CommentAuthor>{author ? author : author_id}さん</CommentAuthor>
+                    </CommentAuthorWrapper>
                     {show_more_read && (
                       <>
                         <MoreReadCheck
