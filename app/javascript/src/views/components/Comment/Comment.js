@@ -4,10 +4,10 @@ import { StateAuthContext } from "../../../context/AuthContext";
 import { getNumLines } from "../Work/utils/characterLimit";
 import { IconContext } from "react-icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { MdDelete } from "react-icons/md"
-import { AiFillEdit } from "react-icons/ai"
-import DeleteComment from "./Divison/DeleteComment"
+import DeleteCommentButton from "./Divison/Button/DeleteCommentButton";
 import PostComment from "./PostComment";
+import EditComment from "./Divison/EditComment";
+import EditCommentButton from "./Divison/Button/EditCommentButton";
 import {
   CommentsWrapper,
   ShowCommentsWrapper,
@@ -19,17 +19,10 @@ import {
   MoreReadCheck,
   MoreReadLabel,
   CommentContent,
-  EditButtonWrapper,
-  EditButton,
-  CancelButton,
-  PostButton,
   IconWrapper,
   DropdownWrapper,
   DropdownListWrapper,
-  DropdownList,
-  ListItem,
-  ListContent,
-  IconBox
+  DropdownList
 } from "../../../styles/Comment/CommentStyle";
 
 
@@ -38,8 +31,6 @@ function Comment(props) {
    * @param {Object} state - ユーザ情報
    * @type {[Array, Function]} - comments
    * @type {[boolean, Function]} - show_edit_button; true: 表示, false: 非表示
-   * @type {[boolean, Function]} - show_delete_modal; true: 表示, false: 非表示
-   * @type {[number, Function]} - delete_comment_id; 削除するコメントのid
    * @type {[Object, Function]} - edit_comment; 編集コメント
    *  @property {number} user_id - ユーザのid
    *  @property {number} work_id - コメントしている作品のid
@@ -48,15 +39,13 @@ function Comment(props) {
   const { state } = useContext(StateAuthContext);
   const [comments, setComments] = useState([]);
   const [show_edit_button, setShowEditButton] = useState(false);
-  const [show_delete_modal, setShowDeleteModal] = useState(false);
-  const [delete_comment_id, setDeleteCommentId] = useState(null);
   const [edit_comment, setEditComment] = useState({
     user_id: state.id,
     work_id: props.work_id,
     comment: null,
   });
 
-  useEffect(() => {
+  const getComments = () => {
     AxiosWrapper.get("/work/comments", { params: { work_id: props.work_id } })
       .then((resp) => {
         setComments(resp.data);
@@ -64,6 +53,10 @@ function Comment(props) {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  useEffect(() => {
+    getComments()
   }, [props.work_id]);
 
   const handleCheckReadMore = (id) => {
@@ -80,42 +73,6 @@ function Comment(props) {
 
   const handleInput = (event) => {
     setEditComment({ ...edit_comment, comment: event.target.innerText });
-  };
-
-  const handleCancel = (id) => {
-    setShowEditButton(false);
-    document.getElementById(`comment-${id}`).contentEditable = "false";
-    document.getElementById(`edit-button-${id}`).style.display = "none";
-  };
-
-  const handlePost = (id) => {
-    AxiosWrapper.patch(
-      `/work/comments/${id}`,
-      { comment: edit_comment },
-      { withCredentials: true }
-    )
-      .then((resp) => {
-        console.log(resp);
-        handleCancel(id);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const handleClickEdit = (id) => {
-    if (show_edit_button) {
-      alert("他の編集中コメントを投稿またはキャンセルしてください");
-    } else {
-      setShowEditButton(true);
-      document.getElementById(`comment-${id}`).contentEditable = "true";
-      document.getElementById(`edit-button-${id}`).style.display = "block";
-    }
-  };
-
-  const handleShowDeleteModal = (id) => {
-    setShowDeleteModal(true);
-    setDeleteCommentId(id);
   };
 
   return (
@@ -172,48 +129,14 @@ function Comment(props) {
                     <DropdownWrapper id={"dropdown-menu-" + id}>
                       <DropdownListWrapper>
                         <DropdownList>
-                          <ListItem onClick={() => handleClickEdit(id)}>
-                            <IconBox>
-                              <IconContext.Provider
-                                value={{ color: "#777", size: "1em" }}
-                              >
-                                <AiFillEdit />
-                              </IconContext.Provider>
-                            </IconBox>
-                            <ListContent>編集</ListContent>
-                          </ListItem>
-                          <ListItem onClick={() => handleShowDeleteModal(id)}>
-                            <IconBox>
-                              <IconContext.Provider
-                                value={{ color: "#777", size: "1em" }}
-                              >
-                                <MdDelete />
-                              </IconContext.Provider>
-                            </IconBox>
-                            <ListContent>削除</ListContent>
-                          </ListItem>
+                          <EditCommentButton id={id} show_edit_button={show_edit_button} setShowEditButton={setShowEditButton} />
+                          <DeleteCommentButton id={id} />
                         </DropdownList>
                       </DropdownListWrapper>
                     </DropdownWrapper>
-                    {show_delete_modal && (
-                      <DeleteComment
-                        delete_comment_id={delete_comment_id}
-                        work_id={props.work_id}
-                        setShowDeleteModal={setShowDeleteModal}
-                      />
-                    )}
                   </IconWrapper>
                 </CommentContainer>
-                <EditButtonWrapper id={`edit-button-${id}`}>
-                  <EditButton>
-                    <CancelButton onClick={() => handleCancel(id)}>
-                      キャンセル
-                    </CancelButton>
-                  </EditButton>
-                  <EditButton>
-                    <PostButton onClick={() => handlePost(id)}>投稿</PostButton>
-                  </EditButton>
-                </EditButtonWrapper>
+                <EditComment id={id} edit_comment={edit_comment} setShowEditButton={setShowEditButton} />
               </CommentWrapper>
             );
           })}
