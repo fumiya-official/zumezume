@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useEffect, useState } from 'react'
+import React, { createContext, useReducer, useEffect } from 'react'
 import AxiosWrapper from '../request/AxiosWrapper'
 import Cookies from 'js-cookie'
 
@@ -39,10 +39,11 @@ const AuthReducer = (state, action) => {
 }
 
 const getCurrentUser = () => {
-  if (!Cookies.get("_access_token") || !Cookies.get("_client") || !Cookies.get("_uid")) {
-    console.log('ログインしていません')
-    return
-  }
+  if (
+    !Cookies.get("_access_token") ||
+    !Cookies.get("_client") ||
+    !Cookies.get("_uid")
+  ) return
   
   return (
     AxiosWrapper.get(
