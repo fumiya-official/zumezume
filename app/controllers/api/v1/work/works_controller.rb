@@ -1,5 +1,5 @@
 class Api::V1::Work::WorksController < ApplicationController
-  before_action only:[:create]
+  before_action :authenticate_api_v1_user!, only: %i[create update destroy]
 
   def index
     if params[:name]
@@ -14,6 +14,10 @@ class Api::V1::Work::WorksController < ApplicationController
 
   def show
     work = Work.joins(:user).select('works.id, release, user_id, title, content, nickname AS author, name AS author_id').find(params[:id])
+    logger.debug('===========')
+    # logger.debug(request.headers.sort.map { |k, v| logger.info "#{k}:#{v}" })
+    logger.debug("現在のユーザはnil?: #{current_api_v1_user.nil?}")
+    logger.debug(session.to_hash)
     render json: work
   end
 

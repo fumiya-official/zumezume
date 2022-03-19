@@ -1,5 +1,6 @@
 class Api::V1::Work::CommentsController < ApplicationController
-
+  before_action :authenticate_api_v1_user!, only: %i[create update destroy]
+  
   def index
     comments = Comment.joins(:work).joins(:user).where(work_id: params[:work_id]).select('comments.id, comment, nickname AS author, name AS author_id').order(updated_at: :desc)
     # comments = Comment.where(work_id: work_id[:work_id]).order(updated_at: :desc)

@@ -4,6 +4,7 @@ import { getCaretPosition, moveCaret, getCurrentChild } from '../views/component
 import { inputRestriction, countContentLines } from '../views/components/Work/utils/characterLimit'
 import { createSpan, createBr } from '../views/components/Work/utils/createElement'
 import AxiosWrapper from '../request/AxiosWrapper'
+import Cookies from "js-cookie";
 
 const WorkDataContext = createContext()
 const WorkInputContext = createContext()
@@ -235,7 +236,16 @@ const WorkProvider = ({children}) => {
   };
 
   const getWork = (id) => {
-    AxiosWrapper.get(`/work/works/${id}`)
+    AxiosWrapper.get(`/work/works/${id}`, {
+        headers: {
+          "access-token": Cookies.get("_access_token"),
+          "client": Cookies.get("_client"),
+          "uid": Cookies.get("_uid")
+        }
+      }, {
+        withCredentials: true
+      }
+      )
       .then((resp) => {
         setWork({
           id: resp.data.id,

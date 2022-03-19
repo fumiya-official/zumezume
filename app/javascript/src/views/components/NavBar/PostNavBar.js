@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import Cookies from 'js-cookie'
 import LogoDiv from "./Division/LogoDiv";
 import SettingDiv from "./Division/SettingDiv";
 import ModalWindowDiv from "./Division/ModalWindowDiv";
@@ -51,22 +52,44 @@ const PostNavBar = (props) => {
     }
 
     if (props.action === "post") {
-      AxiosWrapper.post("/work/works", { work: post_data }, { withCredentials: true })
+      AxiosWrapper.post(
+        "/work/works",
+        { work: post_data },
+        {
+          headers: {
+            "access-token": Cookies.get("_access_token"),
+            client: Cookies.get("_client"),
+            uid: Cookies.get("_uid"),
+          },
+        },
+        { withCredentials: true }
+      )
         .then((resp) => {
-          setShowSaveModal(true)
+          setShowSaveModal(true);
         })
         .catch((err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     }
     else if (props.action === "edit") {
-      AxiosWrapper.patch(`/work/works/${data.work.id}`, { work: post_data }, { withCredentials: true })
+      AxiosWrapper.patch(
+        `/work/works/${data.work.id}`,
+        { work: post_data },
+        {
+          headers: {
+            "access-token": Cookies.get("_access_token"),
+            client: Cookies.get("_client"),
+            uid: Cookies.get("_uid"),
+          },
+        },
+        { withCredentials: true }
+      )
         .then((resp) => {
-          setShowSaveModal(true)
+          setShowSaveModal(true);
         })
         .catch((err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     }
   }
 
@@ -84,24 +107,46 @@ const PostNavBar = (props) => {
     }
     
     if (props.action === "post") {
-      AxiosWrapper.post("/work/works", { work: post_data }, { withCredentials: true })
+      AxiosWrapper.post(
+        "/work/works",
+        { work: post_data },
+        {
+          headers: {
+            "access-token": Cookies.get("_access_token"),
+            client: Cookies.get("_client"),
+            uid: Cookies.get("_uid"),
+          },
+        },
+        { withCredentials: true }
+      )
         .then((resp) => {
-          setWorkId(resp.data.id)
-          setShowPostModal(true)
+          setWorkId(resp.data.id);
+          setShowPostModal(true);
         })
         .catch((err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     }
     else if (props.action === "edit") {
-      AxiosWrapper.patch(`/work/works/${data.work.id}`, { work: post_data }, { withCredentials: true })
+      AxiosWrapper.patch(
+        `/work/works/${data.work.id}`,
+        { work: post_data },
+        {
+          headers: {
+            "access-token": Cookies.get("_access_token"),
+            client: Cookies.get("_client"),
+            uid: Cookies.get("_uid"),
+          },
+        },
+        { withCredentials: true }
+      )
         .then((resp) => {
-          setWorkId(resp.data.id)
-          setShowPostModal(true)
+          setWorkId(resp.data.id);
+          setShowPostModal(true);
         })
         .catch((err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     }
   }
 

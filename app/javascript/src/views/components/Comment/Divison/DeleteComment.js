@@ -1,5 +1,6 @@
 import React from 'react'
 import AxiosWrapper from '../../../../request/AxiosWrapper';
+import Cookies from 'js-cookie'
 import { useParams } from 'react-router-dom'
 import {
   Overlay,
@@ -15,7 +16,13 @@ const DeleteComment = (props) => {
   const { id } = useParams()
 
   const handleDelete = () => {
-    AxiosWrapper.delete(`work/comments/${props.delete_comment_id}`, { withCredentials: true})
+    AxiosWrapper.delete(`work/comments/${props.delete_comment_id}`, {
+        headers: {
+          "access-token": Cookies.get("_access_token"),
+          "client": Cookies.get("_client"),
+          "uid": Cookies.get("_uid")
+        }},
+        { withCredentials: true})
     .then((resp) => {
       console.log('delete')
       console.log(resp)

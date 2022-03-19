@@ -1,11 +1,9 @@
 class Api::V1::Auth::SessionsController < ApplicationController
 
   def index
-    if current_api_user
-      logger.debug("認証済み")
-      render json: { logged_in: true, data: current_api_user }
+    if current_api_v1_user
+      render json: { logged_in: true, data: current_api_v1_user }
     else
-      logger.debug("認証済みユーザはいません")
       render json: { logged_in: false }
     end
   end
