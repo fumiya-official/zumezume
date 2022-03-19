@@ -238,3 +238,86 @@ export const VerticalTitle = styled.div`
     color: #c0c0c0;
   }
 `;
+
+export const ListWrapper = styled.div`
+  @media only screen and (max-width: 480px) {
+    /* モバイルフォン */
+    font-size: 12px;
+  }
+
+  @media only screen and (min-width: 480px) and (max-width: 1024px) {
+    /* タブレット */
+    font-size: 14px;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    /* PC */
+    font-size: 16px;
+  }
+
+  display: flex;
+  justify-content: center;
+  margin-top: 3em;
+`;
+
+export const List = styled.ul`
+  max-width: 800px;
+  list-style: none;
+`;
+
+export const ItemWrapper = styled.li`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 6.25em;
+  padding: 0.5em;
+  border-top: solid 1px #96514d;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #f8f8f8;
+  }
+`;
+
+export const Item = styled.div`
+  > div {
+    display: block;
+  }
+`;
+
+export const Title = styled.div`
+  font-size: 1.562em;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+`;
+
+export const Content = styled.div`
+  font-size: 0.875em;
+  height: 1.3em;
+  width: 30em;
+  margin: 0.1em 0;
+  color: #505050;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+export const WorkInfoWrapper = styled.div`
+  > div {
+    display: inline-block;
+    padding-right: 0.3em;
+  }
+`;
+
+export const UserIcon = styled.div``;
+
+export const AuthorNickname = styled.div`
+  font-size: 0.75em;
+  color: #959595;
+`;
+
+export const PublishDate = styled.div`
+  font-size: 0.75em;
+  color: #959595;
+`;

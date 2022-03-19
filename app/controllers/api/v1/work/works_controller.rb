@@ -6,14 +6,14 @@ class Api::V1::Work::WorksController < ApplicationController
       # ユーザページの作品表示用
       works = Work.joins(:user).where(users: { name: params[:name] }).select('works.id, works.updated_at, release, user_id, title, content, nickname AS author, name AS author_id').order(updated_at: :desc)
     else
-      works = Work.joins(:user).select('works.id, release, user_id, title, content, nickname AS author, name AS author_id').order(updated_at: :desc)
+      works = Work.joins(:user).select('works.id, works.updated_at, release, user_id, title, content, nickname AS author, name AS author_id').order(updated_at: :desc)
     end
     
     render json: works
   end
 
   def show
-    work = Work.joins(:user).select('works.id, release, user_id, title, content, nickname AS author, name AS author_id').find(params[:id])
+    work = Work.joins(:user).select('works.id, works.updated_at, release, user_id, title, content, nickname AS author, name AS author_id').find(params[:id])
     render json: work
   end
 
