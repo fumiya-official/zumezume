@@ -27,6 +27,9 @@ function SignupForm() {
   const navigate = useNavigate()
   const [id_unique, setIdUnique] = useState(true) // falseなら同じIDが登録されている
   const [email_unique, setEmailUnique] = useState(true) // falseなら同じemialが登録されている
+  const [invalid_input, setInvalidInput] = useState(false) // true: 無効な文字 false: 有効な文字
+  const [name_error_message, setNameErrorMessage] = useState(null)
+  const [post_error_message, setPostErrorMessage] = useState(null)
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -44,6 +47,13 @@ function SignupForm() {
   
   // nameまたはemailがユニークかどうか
   const handleChange = (event) => {
+    if (event.target.name == "name" && !event.target.value.match(/^[0-9a-zA-Z\\_]*$/)) {
+      event.preventDefault()
+      setInvalidInput(true)
+      setNameErrorMessage("半角英数字またはアンダースコア(_)を使用してください")
+      return
+    }
+
     if (event.target.name === "name" || event.target.name === "email") {
       const check_data = {
         name: event.target.name,
@@ -54,7 +64,7 @@ function SignupForm() {
       .then((resp) => {
         if (!resp.data.uniqueness) { // 一致するデータがあるとき
           event.target.name === "name"
-          ? setIdUnique(false)
+          ? (setIdUnique(false), setNameErrorMessage("既に使われているIDです"))
           : setEmailUnique(false)
           return
         } else {
@@ -67,12 +77,18 @@ function SignupForm() {
         
       })
     }
-
+    setNameErrorMessage(null)
+    setInvalidInput(false)
     setUser({ ...user, [event.target.name]: event.target.value})
   }
 
   const handleSignup = (event) => {
     event.preventDefault()
+
+    if (!id_unique || !email_unique ) {
+      setPostErrorMessage("無効な入力があります")
+      return
+    }
 
     let params = {
       name: user.name,
@@ -139,7 +155,7 @@ function SignupForm() {
                   />
                 </InputWrapper>
               </TopField>
-              {!id_unique && <Error>既に使われています</Error>}
+              {(!id_unique || invalid_input) && <Error>{name_error_message}</Error>}
               <OtherField>
                 <Label>
                   <label>メールアドレス</label>
@@ -151,7 +167,6 @@ function SignupForm() {
                     value={user.email}
                     placeholder="zumezume@exapmle.com"
                     name="email"
-                    autoComplete="on"
                     required
                   />
                 </InputWrapper>
@@ -169,8 +184,8 @@ function SignupForm() {
                     type="password"
                     value={user.password}
                     name="password"
-                    autoComplete="on"
                     minLength="6"
+                    autoComplete='on'
                     required
                   />
                 </InputWrapper>
@@ -178,6 +193,7 @@ function SignupForm() {
               <ButtonWrapper>
                 <Button>登録する</Button>
               </ButtonWrapper>
+              {post_error_message && <Error>{post_error_message}</Error>}
               <AnnounceWrapper>
                 <Announce>
                   <Link to="/login">登録済みの方はこちらから</Link>
