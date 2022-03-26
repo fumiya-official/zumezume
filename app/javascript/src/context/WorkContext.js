@@ -1,9 +1,9 @@
 import React, { createContext, useState } from 'react'
 import { toZenkaku } from '../views/components/Work/utils/toZenkaku'
-import { getCaretPosition, moveCaret, getCurrentChild } from '../views/components/Work/utils/caretOperation'
+import { getCaretPosition, setCaret, getCurrentNode } from '../views/components/Work/utils/caretOperation'
 import { inputRestriction, countContentLines } from '../views/components/Work/utils/characterLimit'
 import { createSpan, createBr } from '../views/components/Work/utils/createElement'
-import AxiosWrapper from '../request/AxiosWrapper'
+import { getWork } from '../request/api/work'
 
 const WorkDataContext = createContext()
 const WorkInputContext = createContext()
@@ -33,26 +33,34 @@ const WorkProvider = ({children}) => {
   const content_max_words = 400;
 
   const handleTitleKeyDown = (event) => {
-    if (event.key !== "Enter") return;
-
-    if (!inputting) {
-      event.preventDefault();
-      document.getElementById("content").focus();
-      return;
-    } else {
-      setInputting(false);
-    }
-
     // 許容入力文字数に達したら文字が入力できなくなる (limit=false)
-    const limit = inputRestriction(
-      event,
-      event.target.innerText.trim().length,
-      title_max_words + 4
-    );
-    if (!limit) {
-      event.preventDefault();
-      return;
+    if (!inputting) {
+      const can_input = inputRestriction(
+        event,
+        event.target.innerText.trim().length,
+        title_max_words + 4
+      );
+
+      if (!can_input) {
+        event.preventDefault();
+        return;
+      }
     }
+
+    if (event.key == "Enter") {
+      if (pushed_key == " " || pushed_key == "ArrowUp" || pushed_key == "ArrowDown") {
+        setPushedKey(event.key)
+        return
+      }
+
+      inputting
+        ? setInputting(false)
+        : (event.preventDefault(), document.getElementById("content").focus())
+    } else {
+      setPushedKey(event.key)
+    }
+
+    return;
   };
 
   const handleInputTitle = (event) => {
@@ -116,7 +124,7 @@ const WorkProvider = ({children}) => {
       node = span_element.childNodes[0];
     }
 
-    moveCaret(node, caret_position, selection);
+    setCaret(node, caret_position, selection);
 
     // 空欄またはmax word超過ならtrue
     str_within_max_word.length === 0 || str_outside_max_word.length !== 0
@@ -129,30 +137,37 @@ const WorkProvider = ({children}) => {
       const nodes = document.getElementById("content").childNodes;
       const sum_lines = countContentLines(nodes);
       const sum_words = sum_lines * 20;
-      const limit = inputRestriction(event, sum_words, content_max_words + 20);
+      const can_input = inputRestriction(event, sum_words, content_max_words + 20);
 
-      if (!limit) {
+      // 字数制限外だったら入力無効
+      if (!can_input) {
         event.preventDefault();
         return;
       }
     }
 
-    if (event.key === "Enter") {
+    if (event.key == "Enter") {
+      // 日本語変換をspace keyで選択した後の変換決定のためEnterが押されたとき
+      if (pushed_key == " " || pushed_key == "ArrowUp" || pushed_key == "ArrowDown") {
+        setPushedKey(event.key)
+        return
+      }
       // 日本語入力中にEnterが押された(true)、それ意外(false)
       inputting ? setInputting(false) : handleEnterPushed(event);
+      setPushedKey("")
     } else {
       setPushedKey(event.key);
     }
   };
 
   const handleInputContent = (event) => {
-    if (inputting) return;
-
+    if (inputting) return
+    
     const element = document.getElementById("content");
     const nodes = element.childNodes;
     let sum_lines = countContentLines(nodes); // 行数の取得
 
-    if (pushed_key === "Backspace" || pushed_key == "Enter") {
+    if (pushed_key == "Backspace" || pushed_key == "Enter") {
       sum_lines > 20 || event.target.innerText.length === 0
         ? setInvalidContent(true)
         : setInvalidContent(false);
@@ -162,20 +177,19 @@ const WorkProvider = ({children}) => {
     }
 
     const selection = window.getSelection();
-    const event_target = event.target;
-    let caret_position = getCaretPosition(selection, event_target);
+    let caret_position = getCaretPosition(selection, event.target);
 
     event.target.innerText = toZenkaku(event.target.innerText);
 
     setWork({ ...work, content: event.target.innerHTML });
 
-    const [current_child_num, child_caret_position] = getCurrentChild(
+    const [current_child_num, child_caret_position] = getCurrentNode(
       caret_position,
       nodes
     );
 
     const node = nodes[current_child_num];
-    moveCaret(node, child_caret_position, selection);
+    setCaret(node, child_caret_position, selection);
 
     sum_lines = countContentLines(nodes);
 
@@ -201,10 +215,12 @@ const WorkProvider = ({children}) => {
       if (elem.length !== undefined) sum_words += elem.length;
       sum_nodes++;
     });
-
-    // 空欄のとき<br>を更に一つ挿入
+    console.log("nodeの数: "+sum_nodes)
+    console.log("文字数: "+sum_words)
+    console.log("キャレット位置: "+caret_position)
+    // 文字数が0字の場合、<br>を挿入
     // -> sum_nodes === 1
-    // 行末でEnterが押されたとき<br>を更に一つ挿入
+    // 行末でEnterが押されたとき<br>を挿入
     // -> sum_words === caret_position
     // ただし行末の行頭で改行するときは挿入しない(<br><br><br>になっているため)
     // -> element.childNodes[sum_nodes-2].nodeType === 1 && element.childNodes[sum_nodes-3].nodeType === 3
@@ -227,6 +243,8 @@ const WorkProvider = ({children}) => {
     sum_lines > 20 || event.target.innerText.length === 0
       ? setInvalidContent(true)
       : setInvalidContent(false);
+    
+    return
   };
 
   const handleSettingWork = (_title, _content) => {
@@ -234,25 +252,23 @@ const WorkProvider = ({children}) => {
     document.getElementById("content").innerHTML = _content;
   };
 
-  const getWork = (id) => {
-    AxiosWrapper.get(`/work/works/${id}`)
-      .then((resp) => {
-        setWork({
-          id: resp.data.id,
-          title: resp.data.title,
-          content: resp.data.content,
-          user_id: resp.data.user_id,
-          author: resp.data.author,
-          author_id: resp.data.author_id
-        })
-        handleSettingWork(resp.data.title, resp.data.content)
-        return true
-      })
-      .catch((err) => {
-        console.log(err);
-
-        return false
+  const handleGetWork = async (id) => {
+    try {
+      const resp = await getWork(id)
+      setWork({
+        id: resp.data.id,
+        title: resp.data.title,
+        content: resp.data.content,
+        user_id: resp.data.user_id,
+        author: resp.data.author,
+        author_id: resp.data.author_id,
       });
+
+      handleSettingWork(resp.data.title, resp.data.content)
+    }
+    catch(err) {
+      console.log(err)
+    }
   };
 
   const data = {
@@ -271,7 +287,7 @@ const WorkProvider = ({children}) => {
   };
 
   const get = {
-    getWork,
+    handleGetWork,
     handleSettingWork
   }
 

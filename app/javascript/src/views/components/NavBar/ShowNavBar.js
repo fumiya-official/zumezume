@@ -24,7 +24,7 @@ const ShowNavBar = (props) => {
   const navigate = useNavigate();
   
   useEffect(() => {
-    get.getWork(props.work_id)
+    get.handleGetWork(props.work_id)
   }, [props.work_id])
   
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
-import AxiosWrapper from '../../../request/AxiosWrapper'
+import { getWorks } from '../../../request/api/work'
 import { Link } from 'react-router-dom'
 import { getDate } from './utils/date'
 
@@ -68,22 +68,18 @@ function WorkList() {
   const { name } = useParams()
   const [works, setWorks] = useState([])
 
-  const getWorks = () => {
-    AxiosWrapper.get('/work/works', {
-      params: {
-        name: name
-      }
-    })
-      .then((resp) => {
-        setWorks(resp.data)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+  const handleGetWorks = async () => {
+    try {
+      const resp = await getWorks(name)
+      setWorks(resp.data)
+    }
+    catch(err) {
+      console.log(err)
+    }
   }
 
   useEffect(() => {
-    getWorks()
+    handleGetWorks()
   }, [name])
   
 

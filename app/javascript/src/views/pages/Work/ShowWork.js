@@ -14,7 +14,7 @@ function ShowWork() {
   const data = useContext(WorkDataContext)
 
   useEffect(() => {
-    get.getWork(id)
+    get.handleGetWork(id)
   }, [id])
 
   return (

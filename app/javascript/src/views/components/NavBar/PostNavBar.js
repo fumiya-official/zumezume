@@ -1,8 +1,7 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import LogoDiv from "./Division/LogoDiv";
 import SettingDiv from "./Division/SettingDiv";
 import ModalWindowDiv from "./Division/ModalWindowDiv";
-import AxiosWrapper from "../../../request/AxiosWrapper";
 import { StateAuthContext } from "../../../context/AuthContext";
 import { WorkDataContext, WorkInputContext } from "../../../context/WorkContext";
 import {
@@ -42,66 +41,31 @@ const PostNavBar = (props) => {
   const data = useContext(WorkDataContext)
   const input = useContext(WorkInputContext)
 
-  const handleSave = () => {
+  const handlePostWork = async (release) => {
     const post_data = {
       title: data.work.title,
       content: data.work.content,
-      release: 0,
+      release: release, // true: 公開, false: 非公開
       user_id: state.id,
     }
 
-    if (props.action === "post") {
-      AxiosWrapper.post("/work/works", { work: post_data }, { withCredentials: true })
-        .then((resp) => {
-          setShowSaveModal(true)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-    else if (props.action === "edit") {
-      AxiosWrapper.patch(`/work/works/${data.work.id}`, { work: post_data }, { withCredentials: true })
-        .then((resp) => {
-          setShowSaveModal(true)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-  }
-
-  const handlePost = () => {
-    if (input.invalid_title || input.invalid_content) {
+    if (release && (input.invalid_title || input.invalid_content)) {
       setShowErrorModal(true)
       return
     }
-    
-    const post_data = {
-      title: data.work.title,
-      content: data.work.content,
-      release: 1,
-      user_id: state.id,
+
+    try {
+      const resp =
+        props.action === "post"
+          ? await postWork(post_data)
+          : await editWork(post_data, data.work.id);
+      
+      release
+        ? (setWorkId(resp.data.id), setShowPostModal(true))
+        : setShowSaveModal(true)
     }
-    
-    if (props.action === "post") {
-      AxiosWrapper.post("/work/works", { work: post_data }, { withCredentials: true })
-        .then((resp) => {
-          setWorkId(resp.data.id)
-          setShowPostModal(true)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-    else if (props.action === "edit") {
-      AxiosWrapper.patch(`/work/works/${data.work.id}`, { work: post_data }, { withCredentials: true })
-        .then((resp) => {
-          setWorkId(resp.data.id)
-          setShowPostModal(true)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+    catch(err) {
+      console.log(err)
     }
   }
 
@@ -114,15 +78,13 @@ const PostNavBar = (props) => {
           </Left>
           <Right>
             <ButtonWrapper>
-              <Button onClick={handleSave}>キャンセル</Button>
+              <Button onClick={() => handlePostWork(0)}>キャンセル</Button>
             </ButtonWrapper>
             <ButtonWrapper>
-              <Button onClick={handleSave}>保存</Button>
+              <Button onClick={() => handlePostWork(0)}>保存</Button>
             </ButtonWrapper>
             <FillButtonWrapper>
-              <FillButton onClick={handlePost} >
-                投稿
-              </FillButton>
+              <FillButton onClick={() => handlePostWork(1)} >投稿</FillButton>
             </FillButtonWrapper>
             <SettingDiv />
           </Right>

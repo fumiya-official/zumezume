@@ -16,7 +16,7 @@ function EditWork() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    get.getWork(id)
+    get.handleGetWork(id)
   }, [id])
 
   useEffect(() => {

@@ -20,19 +20,19 @@ export const getCaretPosition = (selection, target) => {
       caret_position = pre_caret_range.toString().length;
 
       return caret_position;
-    } else {
-      return 0;
     }
   }
+
+  return 0
 }
 
 /**
  * 半角->全角変換の際に失われたキャレットポジションを元の場所に移動
- * @param {Object} node - キャレットをセットするelment中のnode 
+ * @param {Object} nodes - キャレットをセットするelment中のnode 
  * @param {number} caret_position - 元に戻すキャレット位置
  * @param {Object} selection - window.getSelection
  */
-export const moveCaret = (node, caret_position, selection) => {
+export const setCaret = (node, caret_position, selection) => {
   const editor_range = document.createRange();
   editor_range.setStart(node, caret_position);
   editor_range.setEnd(node, caret_position);
@@ -46,16 +46,15 @@ export const moveCaret = (node, caret_position, selection) => {
  * @param {Object} nodes 
  * @returns {[number, number]} - [現在のelement中のnode番号, そのnode中のキャレット位置]
  */
-export const getCurrentChild = (caret_position, nodes) => {
+export const getCurrentNode = (caret_position, nodes) => {
   let sum_of_length = 0
-  let current_child_num = 0
+  let target_node = 0
+
   for(let i = 0; sum_of_length < caret_position; i++) {
-    if (nodes[i].length === undefined) {
-      continue
-    }
+    if (nodes[i].length === undefined) continue
 
     if (sum_of_length + nodes[i].length >= caret_position) {
-      current_child_num = i
+      target_node = i
       caret_position -= sum_of_length
       break
     }
@@ -63,6 +62,6 @@ export const getCurrentChild = (caret_position, nodes) => {
     sum_of_length += nodes[i].length
   }
 
-  return [current_child_num, caret_position]
+  return [target_node, caret_position]
 
 }
