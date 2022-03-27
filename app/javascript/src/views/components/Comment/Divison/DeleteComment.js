@@ -1,5 +1,5 @@
 import React from 'react'
-import AxiosWrapper from '../../../../request/AxiosWrapper';
+import { deleteComment } from "../../../../request/api/comment"
 import { useParams } from 'react-router-dom'
 import {
   Overlay,
@@ -14,16 +14,14 @@ import {
 const DeleteComment = (props) => {
   const { id } = useParams()
 
-  const handleDelete = () => {
-    AxiosWrapper.delete(`work/comments/${props.delete_comment_id}`, { withCredentials: true})
-    .then((resp) => {
-      console.log('delete')
-      console.log(resp)
+  const handleDelete = async () => {
+    try {
+      const resp = await deleteComment(props.delete_comment_id)
       location.href = `http://localhost:3000/works/${id}`
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+    }
+    catch(err) {
+
+    }
   }
 
   const handleCancel= () => props.setShowDeleteModal(false)

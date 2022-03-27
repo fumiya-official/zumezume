@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import AxiosWrapper from "../../../request/AxiosWrapper";
+import { getComments } from "../../../request/api/comment"
 import { StateAuthContext } from "../../../context/AuthContext";
 import { getNumLines } from "../Work/utils/characterLimit";
 import { IconContext } from "react-icons";
@@ -45,18 +45,18 @@ function Comment(props) {
     comment: null,
   });
 
-  const getComments = () => {
-    AxiosWrapper.get("/work/comments", { params: { work_id: props.work_id } })
-      .then((resp) => {
-        setComments(resp.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleGetComments = async () => {
+    try {
+      const resp = await getComments(props.work_id)
+      setComments(resp.data)
+    }
+    catch(err) {
+
+    }
   }
 
   useEffect(() => {
-    getComments()
+    handleGetComments()
   }, [props.work_id]);
 
   const handleCheckReadMore = (id) => {

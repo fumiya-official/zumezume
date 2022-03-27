@@ -1,5 +1,5 @@
 import React from 'react'
-import AxiosWrapper from "../../../../request/AxiosWrapper";
+import { editComment } from "../../../../request/api/comment"
 import {
   EditButtonWrapper,
   EditButton,
@@ -8,19 +8,15 @@ import {
 } from "../../../../styles/Comment/CommentStyle";
 
 const EditComment = (props) => {
-  const handlePost = (id) => {
-    AxiosWrapper.patch(
-      `/work/comments/${id}`,
-      { comment: props.edit_comment },
-      { withCredentials: true }
-    )
-      .then((resp) => {
-        console.log(resp);
-        handleCancel(id);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  
+  const handlePost = async (id) => {
+    try {
+      const resp = await editComment(id, props.edit_comment)
+      handleCancel(id);
+    }
+    catch(err) {
+
+    }
   };
 
   const handleCancel = (id) => {
