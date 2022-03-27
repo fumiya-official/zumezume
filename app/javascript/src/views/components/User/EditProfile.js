@@ -1,20 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
-  AuthWrapper,
   FormContainer,
   Form,
   TopField,
   OtherField,
   Label,
+  Caption,
   InputWrapper,
   Input,
   Error,
   ButtonWrapper,
   Button,
-  AnnounceWrapper,
-  Announce,
 } from "../../../styles/Auth/AuthStyle";
 import AxiosWrapper from '../../../request/AxiosWrapper';
 import { StateAuthContext } from '../../../context/AuthContext';
@@ -81,6 +79,7 @@ const CancelButton = styled.button`
 function EditProfile() {
   const navigate = useNavigate()
   const [name_unique, setNameUnique] = useState(true)
+  const [invalid_input, setInvalidInput] = useState(false) // true: 無効な文字 false: 有効な文字
   const [user, setUser] = useState({
     nickname: null,
     name: null,
@@ -113,6 +112,10 @@ function EditProfile() {
     getUser()
   }, [name])
 
+  useEffect(() => {
+    if (state.auth) navigate("/works")
+  }, [])
+
   const handleSubmit = (event) => {
     event.preventDefault()
     const params = {
@@ -132,6 +135,12 @@ function EditProfile() {
 
   const handleChange = (event) => {
     if (event.target.name === "name") {
+      if (!event.target.value.match(/^[0-9a-zA-Z\\_]*$/)) {
+        event.preventDefault()
+        setInvalidInput(true)
+        return
+      }
+
       const check_data = {
         name: event.target.name,
         value: event.target.value
@@ -142,12 +151,11 @@ function EditProfile() {
         !resp.data.uniqueness ? setNameUnique(false) : setNameUnique(true)
       })
     }
+    setInvalidInput(false)
     setUser({ ...user, [event.target.name]: event.target.value });
   }
 
-  const handleCancel = () => {
-    navigate(`/${name}`)
-  }
+  const handleCancel = () => navigate(`/${name}`)
 
 
   return (
@@ -156,7 +164,7 @@ function EditProfile() {
         <FormContainer>
           <Form onSubmit={handleSubmit}>
             <TopField>
-              <Label>名前</Label>
+              <Label><label>名前</label></Label>
               <InputWrapper>
                 <Input
                   onChange={handleChange}
@@ -169,7 +177,11 @@ function EditProfile() {
               </InputWrapper>
             </TopField>
             <OtherField>
-              <Label>ユーザーID</Label>
+              <Label>
+                <label>
+                  ユーザーID <Caption>(3~10文字の半角英数字)</Caption>
+                </label>
+              </Label>
               <InputWrapper>
                 <Input
                   onChange={handleChange}
@@ -184,8 +196,9 @@ function EditProfile() {
               </InputWrapper>
             </OtherField>
             {!name_unique && <Error>既に使われています</Error>}
+            {invalid_input && <Error>半角英数字またはアンダースコア(_)を使用してください</Error>}
             <OtherField>
-              <Label>自己紹介</Label>
+              <Label><label>自己紹介</label></Label>
               <InputWrapper>
                 <Textarea
                   onChange={handleChange}
