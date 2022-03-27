@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import LogoDiv from "./Division/LogoDiv";
 import SettingDiv from "./Division/SettingDiv";
 import ModalWindowDiv from "./Division/ModalWindowDiv";
+import { postWork, editWork  } from "../../../request/api/work";
 import { StateAuthContext } from "../../../context/AuthContext";
 import { WorkDataContext, WorkInputContext } from "../../../context/WorkContext";
 import {
@@ -78,13 +79,13 @@ const PostNavBar = (props) => {
           </Left>
           <Right>
             <ButtonWrapper>
-              <Button onClick={() => handlePostWork(0)}>キャンセル</Button>
+              <Button onClick={() => handlePostWork(false)}>キャンセル</Button>
             </ButtonWrapper>
             <ButtonWrapper>
-              <Button onClick={() => handlePostWork(0)}>保存</Button>
+              <Button onClick={() => handlePostWork(false)}>保存</Button>
             </ButtonWrapper>
             <FillButtonWrapper>
-              <FillButton onClick={() => handlePostWork(1)} >投稿</FillButton>
+              <FillButton onClick={() => handlePostWork(true)} >投稿</FillButton>
             </FillButtonWrapper>
             <SettingDiv />
           </Right>
