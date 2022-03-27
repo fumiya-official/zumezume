@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import AxiosWrapper from "../../../request/AxiosWrapper"
+import { signin } from "../../../request/api/auth"
 import { StateAuthContext,DispatchAuthContext } from '../../../context/AuthContext'
 import Cookies from 'js-cookie'
 import {
@@ -43,7 +43,7 @@ function LoginForm() {
     setUser({...user, [event.target.name]: event.target.value})
   }
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault()
 
     let params = {
@@ -51,36 +51,33 @@ function LoginForm() {
       password: user.password
     }
 
-    AxiosWrapper
-    .post("/auth/sign_in", params, { withCredentials: true})
-    .then((resp) => {
-      if (resp.status === 200) {
-        // Cookieに各値を格納
-        Cookies.set("_access_token", resp.headers["access-token"])
-        Cookies.set("_client", resp.headers["client"])
-        Cookies.set("_uid", resp.headers["uid"])
+    try {
+      const resp = await signin(params)
+      if (resp.status == 200) {
+        Cookies.set("_access_token", resp.headers["access-token"]);
+        Cookies.set("_client", resp.headers["client"]);
+        Cookies.set("_uid", resp.headers["uid"]);
 
         dispatch({
           type: 200,
           id: resp.data.data.id,
           name: resp.data.data.name,
-          nickname: resp.data.data.nickname
-        })
-        navigate(-1) ? navigate(-1) : navigate("/works")
-      }
-      else {
-        setMatch(false)
+          nickname: resp.data.data.nickname,
+        });
+        navigate(-1) ? navigate(-1) : navigate("/works");
+      } else {
+        setMatch(false);
         dispatch({
-          type: 400
-        })
+          type: 400,
+        });
       }
-    })
-    .catch((err) => {
-      setMatch(false)
+    }
+    catch(err) {
+      setMatch(false);
       dispatch({
-        type: 400
-      })
-    })
+        type: 400,
+      });
+    }
   }
 
   return (

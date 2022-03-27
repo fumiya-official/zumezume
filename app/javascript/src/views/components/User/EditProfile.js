@@ -1,6 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
+import { checkUniqueness } from "../../../request/api/auth"
+import { getUsers, editUser } from "../../../request/api/user"
+import { StateAuthContext } from "../../../context/AuthContext";
 import {
   FormContainer,
   Form,
@@ -14,8 +17,6 @@ import {
   ButtonWrapper,
   Button,
 } from "../../../styles/Auth/AuthStyle";
-import AxiosWrapper from '../../../request/AxiosWrapper';
-import { StateAuthContext } from '../../../context/AuthContext';
 
 const EditProfileWrapper = styled.div`
   @media only screen and (max-width: 480px) {
@@ -81,79 +82,76 @@ function EditProfile() {
   const [name_unique, setNameUnique] = useState(true)
   const [invalid_input, setInvalidInput] = useState(false) // true: 無効な文字 false: 有効な文字
   const [user, setUser] = useState({
-    nickname: null,
-    name: null,
-    biography: null
+    nickname: "",
+    name: "",
+    biography: ""
   })
   const { state } = useContext(StateAuthContext);
   const name = state.name ? state.name : navigate(-1)
   
-  const getUser = () => {
-    AxiosWrapper.get("/user/users", {
-      params: {
-        name: name,
-      },
-    })
-      .then((resp) => {
-        console.log(resp);
+  const handleGetUsers = async () => {
+    try {
+      const resp = await getUsers(name)
+      if (resp.status == 200) {
         setUser({
           id: resp.data.id,
           nickname: resp.data.nickname,
           name: resp.data.name,
           biography: resp.data.biography
         });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      }
+    }
+    catch(err) {
+      console.log(err)
+    }
   };
 
   useEffect(() => {
-    getUser()
+    handleGetUsers()
   }, [name])
 
   useEffect(() => {
-    if (state.auth) navigate("/works")
+    if (!state.auth) navigate("/works")
   }, [])
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    const params = {
-      nickname: user.nickname,
-      name: user.name,
-      biography: user.biography
+    try {
+      const resp = await editUser(user.id, user.nickname, user.name, user.biography)
+      if (resp.status == 200) {
+        navigate(`/${name}`)
+      }
     }
-    AxiosWrapper.patch(`/user/users/${user.id}`, { user: params }, { withCredentials: true })
-    .then((resp) => {
-      console.log(resp)
-      navigate(`/${name}`)
-    })
-    .catch((err) => {
+    catch(err) {
       console.log(err)
-    })
+    }
   }
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     if (event.target.name === "name") {
       if (!event.target.value.match(/^[0-9a-zA-Z\\_]*$/)) {
         event.preventDefault()
         setInvalidInput(true)
         return
-      }
+      } else {
+        setInvalidInput(false)
+        setUser({...user, [event.target.name]: event.target.value})
+        
+        try {
+          const resp = await checkUniqueness(event.target.name, event.target.value)
+          !resp.data.uniqueness ? setNameUnique(false) : setNameUnique(true);
+        }
+        catch(err) {
 
-      const check_data = {
-        name: event.target.name,
-        value: event.target.value
+        }
       }
-
-      AxiosWrapper.post("/auth/check", { check_data })
-      .then((resp) => {
-        !resp.data.uniqueness ? setNameUnique(false) : setNameUnique(true)
-      })
     }
-    setInvalidInput(false)
     setUser({ ...user, [event.target.name]: event.target.value });
   }
+
+  useEffect(() => {
+    console.log(user)
+  }, [user])
 
   const handleCancel = () => navigate(`/${name}`)
 

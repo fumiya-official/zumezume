@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import AxiosWrapper from "../../../request/AxiosWrapper"
+import { signup, checkUniqueness } from "../../../request/api/auth"
 import { StateAuthContext,DispatchAuthContext } from "../../../context/AuthContext"
 import Cookies from 'js-cookie'
 import {
@@ -46,43 +46,44 @@ function SignupForm() {
   })
   
   // nameまたはemailがユニークかどうか
-  const handleChange = (event) => {
-    if (event.target.name == "name" && !event.target.value.match(/^[0-9a-zA-Z\\_]*$/)) {
+  const handleChange = async (event) => {
+    const name = event.target.name
+    const value = event.target.value
+
+    if (name == "name" && !value.match(/^[0-9a-zA-Z\\_]*$/)) {
       event.preventDefault()
       setInvalidInput(true)
       setNameErrorMessage("半角英数字またはアンダースコア(_)を使用してください")
       return
+    } else {
+      setInvalidInput(false)
+      setNameErrorMessage(null)
     }
 
-    if (event.target.name === "name" || event.target.name === "email") {
-      const check_data = {
-        name: event.target.name,
-        value: event.target.value
-      }
-      AxiosWrapper
-      .post("/auth/check", { check_data })
-      .then((resp) => {
-        if (!resp.data.uniqueness) { // 一致するデータがあるとき
-          event.target.name === "name"
-          ? (setIdUnique(false), setNameErrorMessage("既に使われているIDです"))
-          : setEmailUnique(false)
-          return
-        } else {
-          event.target.name === "name"
-          ? setIdUnique(true)
-          : setEmailUnique(true)
-        }
-      })
-      .catch((err) => {
+    setUser({ ...user, [name]: value });
+
+    if (name === "name" || name === "email") {
+      try {
+        const resp = await checkUniqueness(name, value)
         
-      })
+        if (!resp.data.uniqueness) {
+          // 一致するデータがあるとき
+          name === "name"
+            ? (setIdUnique(false), setNameErrorMessage("既に使われているIDです"))
+            : setEmailUnique(false);
+        } else {
+          name === "name"
+            ? setIdUnique(true)
+            : setEmailUnique(true); 
+        }
+      }
+      catch(err) {
+
+      }
     }
-    setNameErrorMessage(null)
-    setInvalidInput(false)
-    setUser({ ...user, [event.target.name]: event.target.value})
   }
 
-  const handleSignup = (event) => {
+  const handleSignup = async (event) => {
     event.preventDefault()
 
     if (!id_unique || !email_unique ) {
@@ -96,13 +97,9 @@ function SignupForm() {
       password: user.password
     }
 
-    AxiosWrapper
-    .post("/auth", params, { withCredentials: true })
-    .then((resp) => {
-      if (resp.status === 200) {
-        // Cookieに各値を格納
-        // 後でメール確認も追加
-        console.log("成功")
+    try {
+      const resp = await signup(params)
+      if (resp.status == 200) {
         Cookies.set("_access_token", resp.headers["access-token"])
         Cookies.set("_client", resp.headers["client"])
         Cookies.set("_uid", resp.headers["uid"])
@@ -111,20 +108,18 @@ function SignupForm() {
           id: resp.data.data.name,
           name: resp.data.data.nickname
         })
-        navigate("/")
-      }
-      else {
-        console.log("失敗")
+        navigate("/works")
+      } else {
         dispatch({
-          type: 400
-        })
+          type: 400,
+        });
       }
-    })
-    .catch((err) => {
+    }
+    catch(err) {
       dispatch({
-        type: 400
-      })
-    })
+        type: 400,
+      });
+    }
   }
 
   return (
@@ -148,6 +143,7 @@ function SignupForm() {
                     type="text"
                     value={user.name}
                     placeholder="zume"
+                    id="name"
                     name="name"
                     minLength="3"
                     maxLength="10"
@@ -166,6 +162,7 @@ function SignupForm() {
                     type="email"
                     value={user.email}
                     placeholder="zumezume@exapmle.com"
+                    id="email"
                     name="email"
                     required
                   />
@@ -183,6 +180,7 @@ function SignupForm() {
                     onChange={handleChange}
                     type="password"
                     value={user.password}
+                    id="password"
                     name="password"
                     minLength="6"
                     autoComplete='on'

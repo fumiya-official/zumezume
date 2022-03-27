@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useParams, useNavigate } from 'react-router-dom'
-import AxiosWrapper from '../../../request/AxiosWrapper'
+import { getUsers } from "../../../request/api/user"
 import { AiOutlineUser } from "react-icons/ai";
 import { IconContext } from "react-icons";
 import { StateAuthContext } from '../../../context/AuthContext';
@@ -90,19 +90,20 @@ function Profile() {
     nickname: null,
     name: null
   })
+  const [loading, setLoading] = useState(false)
 
-  const getUser = () => {
-    AxiosWrapper.get("/user/users", {
-      params: {
-        name: name,
-      },
-    })
-      .then((resp) => {
-        setUser(resp.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleGetUsers = async () => {
+    try {
+      const resp = await getUsers(name)
+      if (resp.status == 200) {
+        console.log(resp)
+        setUser(resp.data)
+        setLoading(true)
+      }
+    }
+    catch(err) {
+      console.log(err)
+    }
   }
 
   const getIdentity = () => {
@@ -110,37 +111,41 @@ function Profile() {
   }
 
   useEffect(() => {
-    getUser()
+    handleGetUsers()
     getIdentity()
   }, [name])
 
   return (
     <>
-      <ProfileWrapper>
-        <ProfileContainer>
-          <IconWrapper>
-            <IconContext.Provider value={{color: "96514d", size: "5em"}}>
-              <AiOutlineUser />
-            </IconContext.Provider>
-          </IconWrapper>
-          <UserWrapper>
-            <UserInfoWrapper>
-              <UserInfo>
-                <Name>{user.nickname ? user.nickname : user.name}</Name>
-                <Id>@{user.name}</Id>
-              </UserInfo>
-              {profile_setting_button &&(
-                <ButtonWrapper>
-                  <Button onClick={() => navigate("/profile/setting")}>プロフィールを編集</Button>
-                </ButtonWrapper>
-              )}
-            </UserInfoWrapper>
-            <UserInfoWrapper>
-              <UserInfo>{user.biography}</UserInfo>
-            </UserInfoWrapper>
-          </UserWrapper>
-        </ProfileContainer>
-      </ProfileWrapper>
+      { loading ? 
+        <ProfileWrapper>
+          <ProfileContainer>
+            <IconWrapper>
+              <IconContext.Provider value={{color: "96514d", size: "5em"}}>
+                <AiOutlineUser />
+              </IconContext.Provider>
+            </IconWrapper>
+            <UserWrapper>
+              <UserInfoWrapper>
+                <UserInfo>
+                  <Name>{user.nickname ? user.nickname : user.name}</Name>
+                  <Id>@{user.name}</Id>
+                </UserInfo>
+                {profile_setting_button &&(
+                  <ButtonWrapper>
+                    <Button onClick={() => navigate("/profile/setting")}>プロフィールを編集</Button>
+                  </ButtonWrapper>
+                )}
+              </UserInfoWrapper>
+              <UserInfoWrapper>
+                <UserInfo>{user.biography}</UserInfo>
+              </UserInfoWrapper>
+            </UserWrapper>
+          </ProfileContainer>
+        </ProfileWrapper>
+        :
+        <label>・・・</label>
+      }
     </>
   )
 }

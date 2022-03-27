@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useEffect } from 'react'
-import AxiosWrapper from '../request/AxiosWrapper'
+import { currentUser } from "../request/api/auth"
 import Cookies from 'js-cookie'
 
 const StateAuthContext = createContext()
@@ -45,19 +45,7 @@ const getCurrentUser = () => {
     !Cookies.get("_uid")
   ) return
   
-  return (
-    AxiosWrapper.get(
-      "/auth/sessions",
-      {
-        headers: {
-          "access-token": Cookies.get("_access_token"),
-          "client": Cookies.get("_client"),
-          "uid": Cookies.get("_uid")
-        }
-      },
-      { withCredentials: true }
-    )
-  )
+  return currentUser()
 }
 
 const handleGetCurrentUser = async (dispatch) => {
