@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import { checkUniqueness } from "../../../request/api/auth"
 import { getUsers, editUser } from "../../../request/api/user"
@@ -17,65 +16,12 @@ import {
   ButtonWrapper,
   Button,
 } from "../../../styles/Auth/AuthStyle";
-
-const EditProfileWrapper = styled.div`
-  @media only screen and (max-width: 480px) {
-    /* モバイルフォン */
-    font-size: 12px;
-  }
-
-  @media only screen and (min-width: 480px) and (max-width: 1024px) {
-    /* タブレット */
-    font-size: 14px;
-  }
-
-  @media only screen and (min-width: 1024px) {
-    /* PC */
-    font-size: 16px;
-  }
-  margin-top: 4em;
-`;
-
-const FormWrapper = styled.div`
-  margin: 0 auto;
-  width: 25em;
-  height: 37.5em;
-`;
-
-const Textarea = styled.textarea`
-  width: 100%;
-  height: 15em;
-  outline: none;
-  border-radius: 5px;
-  border: solid 1px #e8e8e8;
-  
-  &:focus {
-    border: solid 1px #96514d;
-  }
-
-  &::placeholder {
-    color: #dcdcdc;
-  }
-`;
-
-const CancelButton = styled.button`
-  width: 100%;
-  height: 2.5em;
-  padding: 0.5em;
-  font-size: 1em;
-  border: none;
-  border-radius: 5px;
-  background: #fff;
-  border: solid 1px #96514d;
-  color: #96514d;
-
-  &:hover {
-    background-color: #f6f6f6;
-    cursor: pointer;
-  }
-`;
-
-
+import {
+  EditProfileWrapper,
+  FormWrapper,
+  Textarea,
+  CancelButton
+} from "../../../styles/User/UserStyle"
 
 function EditProfile() {
   const navigate = useNavigate()
@@ -149,12 +95,7 @@ function EditProfile() {
     setUser({ ...user, [event.target.name]: event.target.value });
   }
 
-  useEffect(() => {
-    console.log(user)
-  }, [user])
-
   const handleCancel = () => navigate(`/${name}`)
-
 
   return (
     <EditProfileWrapper>
