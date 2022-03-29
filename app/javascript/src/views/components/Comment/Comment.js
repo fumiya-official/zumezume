@@ -5,7 +5,7 @@ import { getNumLines } from "../Work/utils/characterLimit";
 import { IconContext } from "react-icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import DeleteCommentButton from "./Divison/Button/DeleteCommentButton";
-import PostComment from "./PostComment";
+import {PostComment} from "./Divison/PostComment";
 import EditComment from "./Divison/EditComment";
 import EditCommentButton from "./Divison/Button/EditCommentButton";
 import {

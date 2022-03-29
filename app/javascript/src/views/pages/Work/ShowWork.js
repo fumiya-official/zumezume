@@ -5,13 +5,12 @@ import Comment from "../../components/Comment/Comment";
 import { WritingModeContext } from "../../../context/WritingModeContext";
 import { useParams } from "react-router-dom";
 import ShowNavBar from "../../components/NavBar/ShowNavBar";
-import { WorkDataContext, WorkGetContext } from "../../../context/WorkContext";
+import { WorkGetContext } from "../../../context/WorkContext";
 
 function ShowWork() {
   const { writing_mode } = useContext(WritingModeContext)
   const { id } = useParams()
   const get = useContext(WorkGetContext)
-  const data = useContext(WorkDataContext)
 
   useEffect(() => {
     get.handleGetWork(id)

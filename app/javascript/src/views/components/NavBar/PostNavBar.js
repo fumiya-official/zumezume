@@ -9,7 +9,6 @@ import {
   NavBarWrapper,
   Header,
   Left,
-  Center,
   Right,
   ButtonWrapper,
   Button,

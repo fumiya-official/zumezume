@@ -1,17 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import LogoDiv from "./Division/LogoDiv";
-
 import {
   NavBarWrapper,
   Header,
   Left,
-  Center,
   Right,
   ButtonWrapper,
-  Button,
-  FillButtonWrapper,
-  FillButton,
+  Button
 } from "../../../styles/NavBar/NavBarStyle";
 
 const AuthNavBar = () => {

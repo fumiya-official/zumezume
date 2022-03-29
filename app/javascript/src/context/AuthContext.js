@@ -15,7 +15,7 @@ const DispatchAuthContext = createContext()
  *  @property {string} nickname - 表示名
  * @returns {Object}
  */
-const AuthReducer = (state, action) => {
+const authReducer = (state, action) => {
   switch (action.type) {
     case 200:
       console.log('success')
@@ -87,7 +87,7 @@ const AuthProvider = ({ children }) => {
     nickname: null,
   };
 
-  const [state, dispatch] = useReducer(AuthReducer, initial_state);
+  const [state, dispatch] = useReducer(authReducer, initial_state);
 
   useEffect(() => {
     handleGetCurrentUser(dispatch);

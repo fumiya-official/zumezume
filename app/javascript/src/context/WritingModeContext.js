@@ -5,7 +5,7 @@ import { useWindowSize } from 'react-use'
 const WritingModeContext = createContext()
 
 const WritingModeProvider = ({children}) => {
-  const [writing_mode, setWritingMode] = useState(1)
+  const [writing_mode, setWritingMode] = useState(true) //true: 横書き、false: 縦書き
   const { width } = useWindowSize()
 
   useEffect(() => {

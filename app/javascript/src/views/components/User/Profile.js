@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getUsers } from "../../../request/api/user"
+import { getUser } from "../../../request/api/user"
 import { AiOutlineUser } from "react-icons/ai";
 import { IconContext } from "react-icons";
 import { StateAuthContext } from '../../../context/AuthContext';
@@ -29,9 +29,9 @@ function Profile() {
   })
   const [loading, setLoading] = useState(false)
 
-  const handleGetUsers = async () => {
+  const handleGetUser = async () => {
     try {
-      const resp = await getUsers(name)
+      const resp = await getUser(name)
       if (resp.status == 200) {
         setUser({
           nickname: resp.data.nickname,
@@ -51,7 +51,7 @@ function Profile() {
   }
 
   useEffect(() => {
-    handleGetUsers()
+    handleGetUser()
     getIdentity()
   }, [name])
 

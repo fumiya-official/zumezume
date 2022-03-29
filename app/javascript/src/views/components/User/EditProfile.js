@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { checkUniqueness } from "../../../request/api/auth"
-import { getUsers, editUser } from "../../../request/api/user"
+import { getUser, editUser } from "../../../request/api/user"
 import { StateAuthContext } from "../../../context/AuthContext";
 import {
   FormContainer,
@@ -35,9 +35,9 @@ function EditProfile() {
   const { state } = useContext(StateAuthContext);
   const name = state.name ? state.name : navigate(-1)
   
-  const handleGetUsers = async () => {
+  const handleGetUser = async () => {
     try {
-      const resp = await getUsers(name)
+      const resp = await getUser(name)
       if (resp.status == 200) {
         setUser({
           id: resp.data.id,
@@ -53,7 +53,7 @@ function EditProfile() {
   };
 
   useEffect(() => {
-    handleGetUsers()
+    handleGetUser()
   }, [name])
 
   useEffect(() => {

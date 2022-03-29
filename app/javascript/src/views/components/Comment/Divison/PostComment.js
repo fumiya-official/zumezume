@@ -1,15 +1,15 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StateAuthContext } from '../../../context/AuthContext';
-import { postComment } from "../../../request/api/comment"
+import { StateAuthContext } from '../../../../context/AuthContext';
+import { postComment } from "../../../../request/api/comment"
 import {
   PostCommentWrapper,
   InputComment,
   SubmitButtonWrapper,
   SubmitButton
-} from '../../../styles/Comment/CommentStyle';
+} from '../../../../styles/Comment/CommentStyle';
 
-const PostComment = (props) => {
+export const PostComment = (props) => {
   const [new_comment, setNewComment] = useState("");
   const { state } = useContext(StateAuthContext)
   const navigation = useNavigate()
@@ -56,5 +56,3 @@ const PostComment = (props) => {
     </>
   );
 }
-
-export default PostComment

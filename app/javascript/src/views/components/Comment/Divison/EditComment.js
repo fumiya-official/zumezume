@@ -7,7 +7,7 @@ import {
   PostButton
 } from "../../../../styles/Comment/CommentStyle";
 
-const EditComment = (props) => {
+export const EditComment = (props) => {
   
   const handlePost = async (id) => {
     try {
@@ -40,5 +40,3 @@ const EditComment = (props) => {
     </>
   );
 }
-
-export default EditComment

@@ -5,7 +5,7 @@ import AxiosWrapper from "../AxiosWrapper"
  * @param {string} name - 検索するユーザid
  * @returns {Object}
  */
-export const getUsers = (name) => {
+export const getUser = (name) => {
   return AxiosWrapper.get("/user/users",
     {
       params: {
